@@ -51,6 +51,7 @@ class ProdukResource extends Resource
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('qty')
+                    ->label('Stok')
                     ->required()
                     ->numeric(),
                 Forms\Components\Textarea::make('deskripsi')
@@ -65,6 +66,7 @@ class ProdukResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->description('Daftar produk hasil karya Teaching Factory di SMKN Balanipa')
             ->columns([
                 Tables\Columns\TextColumn::make('kategori.nama_kategori')
                     ->sortable(),
@@ -73,11 +75,13 @@ class ProdukResource extends Resource
                 Tables\Columns\TextColumn::make('harga')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('ukuran'),
+                Tables\Columns\TextColumn::make('ukuran')
+                ,
                 Tables\Columns\ColorColumn::make('warna'),
                 Tables\Columns\TextColumn::make('bahan')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('qty')
+                    ->label('Stok / Jumlah')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\ImageColumn::make('gambar'),
