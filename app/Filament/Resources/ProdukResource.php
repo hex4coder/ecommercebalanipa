@@ -68,23 +68,23 @@ class ProdukResource extends Resource
         return $table
             ->description('Daftar produk hasil karya Teaching Factory di SMKN Balanipa')
             ->columns([
+                Tables\Columns\ImageColumn::make('gambar'),
                 Tables\Columns\TextColumn::make('kategori.nama_kategori')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('nama')
                     ->searchable(),
+                Tables\Columns\ColorColumn::make('warna'),
                 Tables\Columns\TextColumn::make('harga')
+                    ->prefix('Rp. ')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('ukuran')
-                ,
-                Tables\Columns\ColorColumn::make('warna'),
+                Tables\Columns\TextColumn::make('ukuran'),
                 Tables\Columns\TextColumn::make('bahan')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('qty')
                     ->label('Stok / Jumlah')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\ImageColumn::make('gambar'),
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
