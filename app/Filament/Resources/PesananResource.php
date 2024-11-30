@@ -6,7 +6,9 @@ use App\Filament\Resources\PesananResource\Pages;
 use App\Filament\Resources\PesananResource\RelationManagers;
 use App\Models\Pesanan;
 use Filament\Forms;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -31,7 +33,7 @@ class PesananResource extends Resource
                     ->relationship('pelanggan', 'nama')
                     ->required(),
                 Forms\Components\DateTimePicker::make('tanggal')
-                ->label('Tanggal Order')
+                    ->label('Tanggal Order')
                     ->required(),
                 Select::make('status')
                     ->options([
@@ -43,8 +45,17 @@ class PesananResource extends Resource
                     ])
                     ->label('Status Pesanan')
                     ->required(),
+                Repeater::make('detail')
+                    ->schema([
+                        Select::make('produk_id')
+                            ->relationship('produk', 'nama')
+                            ->label('Produk')
+                            ->required(),
+                        TextInput::make('jumlah')->numeric()->required(),
+                        TextInput::make('total')->numeric()->required(),
+                    ]),
                 Forms\Components\Textarea::make('alasan_pembatalan')
-                        ->label('Alasan Pembatalan')
+                    ->label('Alasan Pembatalan')
                     ->columnSpanFull(),
             ]);
     }
