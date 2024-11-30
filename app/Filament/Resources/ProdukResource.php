@@ -20,6 +20,7 @@ class ProdukResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-square-3-stack-3d';
 
+    protected static ?string $slug = 'produk';
     protected static ?string $navigationGroup = 'Data';
 
     public static function form(Form $form): Form

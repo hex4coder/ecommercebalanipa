@@ -12,4 +12,8 @@ class Pelanggan extends Model
     protected $table = 'pelanggan';
 
     protected $guarded = [];
+
+    public function pesanan() {
+        return $this->hasMany(Pesanan::class, 'pelanggan_id');
+    }
 }
