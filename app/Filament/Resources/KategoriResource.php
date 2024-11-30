@@ -29,6 +29,12 @@ class KategoriResource extends Resource
             ->schema([
                 //
                 TextInput::make('nama_kategori')
+                ->required()
+                ->unique('kategori', 'nama_kategori')
+                ->label('Kategori')
+                ->validationMessages([
+                    'unique' => 'Kategori sudah ada'
+                ])
             ]);
     }
 
