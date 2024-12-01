@@ -48,7 +48,7 @@ class PesananResource extends Resource
                 Repeater::make('detail')
                     ->schema([
                         Select::make('produk_id')
-                            ->relationship('produk', 'nama')
+                            ->relationship('detail.produk', 'nama')
                             ->label('Produk')
                             ->required(),
                         TextInput::make('jumlah')->numeric()->required(),

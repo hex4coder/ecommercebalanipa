@@ -34,6 +34,7 @@ class ProdukResource extends Resource
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('harga')
+                    ->prefix('Rp. ')
                     ->required()
                     ->numeric(),
                 Forms\Components\Select::make('ukuran')
@@ -108,6 +109,7 @@ class ProdukResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\ForceDeleteBulkAction::make(),
                 ]),
             ]);
     }

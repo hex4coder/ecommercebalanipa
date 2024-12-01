@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('produk_id')->constrained('produk', 'id')->cascadeOnDelete()->cascadeOnUpdate();
             $table->integer('jumlah')->min(1)->default(1);
             $table->bigInteger('total');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->dateTime('tanggal');
             $table->enum('status', ['menunggu', 'sedang diproses', 'sudah dikirim', 'selesai', 'dibatalkan'])->default('menunggu');
             $table->longText('alasan_pembatalan')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

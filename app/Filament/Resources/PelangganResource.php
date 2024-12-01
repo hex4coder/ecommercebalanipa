@@ -30,19 +30,43 @@ class PelangganResource extends Resource
                 Forms\Components\TextInput::make('email')
                     ->email()
                     ->required()
+                    ->unique('pelanggan', 'email')
+                    ->validationMessages([
+                        'required' => 'Wajib diisi',
+                        'unique' => 'Email sudah ada',
+                        'email' => 'Email tidak valid'
+                    ])
                     ->maxLength(255),
                 Forms\Components\TextInput::make('nama')
                     ->required()
+                    ->validationMessages([
+                        'required' => 'Wajib diisi',
+                    ])
                     ->maxLength(255),
                 Forms\Components\TextInput::make('nomor_hp')
                     ->required()
+                    ->validationMessages([
+                        'required' => 'Wajib diisi',
+                        'min_digits' => 'Minimal 11 digit',
+                        'max_digits' => 'Maximal 15 digits'
+                    ])
                     ->numeric()
+                    ->label('Nomor HP')
+                    ->minLength(11)
                     ->maxLength(15),
                 Forms\Components\Textarea::make('alamat')
                     ->required()
+                    ->minLength(10)
+                    ->validationMessages([
+                        'required' => 'Wajib diisi',
+                        'min_digits' => 'Minimal 10 digit',
+                    ])
                     ->columnSpanFull(),
                 Forms\Components\FileUpload::make('profil')
                     ->required()
+                    ->validationMessages([
+                        'required' => 'Wajib diisi',
+                    ])
                     ->columnSpanFull(),
             ]);
     }
@@ -82,6 +106,7 @@ class PelangganResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\ForceDeleteBulkAction::make(),
                 ]),
             ]);
     }

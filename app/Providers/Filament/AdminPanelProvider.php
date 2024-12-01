@@ -57,7 +57,6 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->brandLogo(asset('/img/logo.png'))
             ->brandName('E-Commerce SMKN Balanipa')
-            ->spa()
-            ;
+            ->spa();
     }
 }
