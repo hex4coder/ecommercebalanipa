@@ -32,6 +32,8 @@ class PesananResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('pelanggan_id')
+                    ->searchable()
+                    ->preload()
                     ->relationship('pelanggan', 'nama')
                     ->required(),
                 Forms\Components\DateTimePicker::make('tanggal')
@@ -53,17 +55,28 @@ class PesananResource extends Resource
                         Select::make('produk_id')
                             ->relationship('produk', 'nama')
                             ->label('Produk')
-                            ->reactive()
+                            ->searchable()
+                            ->preload()
+                            ->live()
                             ->afterStateUpdated(function ($state, callable $get, callable $set) {
                                 $produk = Produk::find($state);
-                                $set('harga', $produk->harga);
+                                if($produk) {
 
-                                $qty = $get('jumlah');
+                                    $set('harga', $produk->harga);
 
-                                if ($qty) {
+                                    $qty = $get('jumlah') ?? 1;
+
+                                    if($qty == 1) {
+                                        $set('jumlah', $qty);
+                                    }
+
                                     $harga = $produk->harga;
                                     $total = $harga * $qty;
                                     $set('total', $total);
+                                } else {
+                                    $set('harga', '');
+                                    $set('jumlah', '');
+                                    $set('total', '');
                                 }
                             })
                             ->required(),
@@ -72,13 +85,15 @@ class PesananResource extends Resource
                             ->reactive()
                             ->afterStateUpdated(function ($state, callable $get, callable $set) {
                                 $harga = $get('harga');
-                                $qty = $state ?? 0;
-                                $total = $harga * $qty;
-                                $set('total', $total);
+                                if($harga) {
+                                    $qty = $state ?? 1;
+                                    $total = $harga * $qty;
+                                    $set('total', $total);
+                                }
                             })
                             ->numeric()
                             ->required(),
-                        TextInput::make('total')->numeric()->required()->readOnly(),
+                        TextInput::make('total')->numeric()->required()->readOnly()->prefix('Rp. '),
                     ]),
                 Forms\Components\Textarea::make('alasan_pembatalan')
                     ->label('Alasan Pembatalan')

@@ -13,6 +13,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -33,9 +34,13 @@ class ProdukResource extends Resource
             ->schema([
                 Forms\Components\Select::make('kategori_id')
                     ->relationship('kategori', 'nama_kategori')
+                    ->searchable()
+                    ->preload()
                     ->required(),
                 Forms\Components\Select::make('brand_id')
                     ->relationship('brand', 'name')
+                    ->searchable()
+                    ->preload()
                     ->label('Merek')
                     ->required(),
                 Forms\Components\TextInput::make('nama')
@@ -77,8 +82,6 @@ class ProdukResource extends Resource
             ->description('Daftar produk hasil karya Teaching Factory di SMKN Balanipa')
             ->columns([
                 Tables\Columns\ImageColumn::make('thumbnail'),
-                Tables\Columns\TextColumn::make('kategori.nama_kategori')
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('nama')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('brand.name')->label('Merek'),
@@ -88,8 +91,6 @@ class ProdukResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('ukuran_produk.ukuran')
                 ->label('Ukuran'),
-                Tables\Columns\ImageColumn::make('foto_produk.foto')
-                ->label('Foto'),
                 Tables\Columns\TextColumn::make('stok')
                     ->label('Stok')
                     ->numeric()
@@ -110,9 +111,16 @@ class ProdukResource extends Resource
             ->filters([
                 //
                 TrashedFilter::make(),
+                SelectFilter::make('kategori_id')
+                ->label('Kategori')
+                ->relationship('kategori', 'nama_kategori'),
+                SelectFilter::make('brand_id')
+                ->label('Merek')
+                ->relationship('brand', 'name')
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\RestoreAction::make(),
             ])
             ->bulkActions([

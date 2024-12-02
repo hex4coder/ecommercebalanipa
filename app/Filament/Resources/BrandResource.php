@@ -50,13 +50,13 @@ class BrandResource extends Resource
             ->columns([
                 ImageColumn::make('logo'),
                 TextColumn::make('name')->label('Nama Merek'),
-                TextColumn::make('slug'),
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
