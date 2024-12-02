@@ -17,6 +17,10 @@ class Produk extends Model
         return $this->belongsTo(Brand::class, 'brand_id');
     }
 
+    public function detail_pesanan() {
+        return $this->hasMany(DetailPesanan::class, 'produk_id');
+    }
+
     public function foto_produk() {
         return $this->hasMany(FotoProduk::class, 'produk_id');
     }

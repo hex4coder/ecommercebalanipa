@@ -5,7 +5,6 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\PelangganResource\Pages;
 use App\Filament\Resources\PelangganResource\RelationManagers;
 use App\Models\Pelanggan;
-use Filament\Actions\RestoreAction;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -104,7 +103,7 @@ class PelangganResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                RestoreAction::make(),
+                Tables\Actions\RestoreAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

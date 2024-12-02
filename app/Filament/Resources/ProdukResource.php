@@ -61,12 +61,12 @@ class ProdukResource extends Resource
                 Repeater::make('foto_produk')
                 ->relationship()
                 ->schema([
-                    FileUpload::make('foto'),
+                    FileUpload::make('foto')->required(),
                 ])->label('Foto Lainnya'),
                 Repeater::make('ukuran_produk')
                 ->relationship()
                 ->schema([
-                    TextInput::make('ukuran'),
+                    TextInput::make('ukuran')->required(),
                 ])->label('Ukuran Produk')
             ]);
     }
