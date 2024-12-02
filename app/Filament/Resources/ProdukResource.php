@@ -81,7 +81,7 @@ class ProdukResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('nama')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('brand.name'),
+                Tables\Columns\TextColumn::make('brand.name')->label('Merek'),
                 Tables\Columns\TextColumn::make('harga')
                     ->prefix('Rp. ')
                     ->numeric()
