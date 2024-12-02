@@ -18,7 +18,7 @@ class ProdukResource extends Resource
 {
     protected static ?string $model = Produk::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-square-3-stack-3d';
+    protected static ?string $navigationIcon = 'heroicon-o-clipboard-document';
 
     protected static ?string $slug = 'produk';
     protected static ?string $navigationGroup = 'Data';
@@ -30,6 +30,10 @@ class ProdukResource extends Resource
                 Forms\Components\Select::make('kategori_id')
                     ->relationship('kategori', 'nama_kategori')
                     ->required(),
+                Forms\Components\Select::make('brand_id')
+                    ->relationship('brands', 'name')
+                    ->label('Merek')
+                    ->required(),
                 Forms\Components\TextInput::make('nama')
                     ->required()
                     ->maxLength(255),
@@ -37,29 +41,16 @@ class ProdukResource extends Resource
                     ->prefix('Rp. ')
                     ->required()
                     ->numeric(),
-                Forms\Components\Select::make('ukuran')
-                    ->options([
-                        's' => 'S',
-                        'm' => 'M',
-                        'l' => 'L',
-                        'xl' => 'XL',
-                        'xxl' => 'XXL',
-                    ])
-                    ->required(),
-                Forms\Components\ColorPicker::make('warna')
-                    ->required(),
-                Forms\Components\TextInput::make('bahan')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('qty')
+                Forms\Components\TextInput::make('stok')
                     ->label('Stok')
                     ->required()
                     ->numeric(),
                 Forms\Components\Textarea::make('deskripsi')
                     ->required()
                     ->columnSpanFull(),
-                Forms\Components\FileUpload::make('gambar')
+                Forms\Components\FileUpload::make('thumbnail')
                     ->required()
+                    ->label('Thumbnail / Foto')
                     ->columnSpanFull(),
             ]);
     }

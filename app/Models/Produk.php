@@ -13,6 +13,9 @@ class Produk extends Model
     protected $table = 'produk';
     protected $guarded = [];
 
+    public function brands() {
+        return $this->belongsTo(Brand::class);
+    }
 
     public function kategori() {
         return $this->belongsTo(Kategori::class, 'id');
