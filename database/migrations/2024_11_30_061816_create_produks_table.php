@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('produk', function (Blueprint $table) {
             $table->id();
             $table->foreignId('kategori_id')->constrained('kategori', 'id')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId('brand_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('brand_id')->constrained('brands', 'id')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('nama');
             $table->longText('deskripsi');
             $table->bigInteger('harga');

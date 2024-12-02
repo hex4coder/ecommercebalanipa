@@ -13,8 +13,16 @@ class Produk extends Model
     protected $table = 'produk';
     protected $guarded = [];
 
-    public function brands() {
-        return $this->belongsTo(Brand::class);
+    public function brand() {
+        return $this->belongsTo(Brand::class, 'brand_id');
+    }
+
+    public function foto_produk() {
+        return $this->hasMany(FotoProduk::class, 'produk_id');
+    }
+
+    public function ukuran_produk() {
+        return $this->hasMany(UkuranProduk::class, 'produk_id');
     }
 
     public function kategori() {

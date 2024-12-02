@@ -6,6 +6,10 @@ use App\Filament\Resources\ProdukResource\Pages;
 use App\Filament\Resources\ProdukResource\RelationManagers;
 use App\Models\Produk;
 use Filament\Forms;
+use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -31,27 +35,39 @@ class ProdukResource extends Resource
                     ->relationship('kategori', 'nama_kategori')
                     ->required(),
                 Forms\Components\Select::make('brand_id')
-                    ->relationship('brands', 'name')
+                    ->relationship('brand', 'name')
                     ->label('Merek')
                     ->required(),
                 Forms\Components\TextInput::make('nama')
                     ->required()
-                    ->maxLength(255),
+                    ->label('Nama Produk'),
                 Forms\Components\TextInput::make('harga')
                     ->prefix('Rp. ')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('stok')
+                    Forms\Components\TextInput::make('stok')
                     ->label('Stok')
                     ->required()
                     ->numeric(),
-                Forms\Components\Textarea::make('deskripsi')
-                    ->required()
-                    ->columnSpanFull(),
+                    Forms\Components\Textarea::make('deskripsi')
+                        ->required()
+                        ,
+                    Checkbox::make('is_popular')->label('Tandai sebagai produk populer?')
+                    ,
                 Forms\Components\FileUpload::make('thumbnail')
                     ->required()
                     ->label('Thumbnail / Foto')
                     ->columnSpanFull(),
+                Repeater::make('foto_produk')
+                ->relationship()
+                ->schema([
+                    FileUpload::make('foto'),
+                ])->label('Foto Lainnya'),
+                Repeater::make('ukuran_produk')
+                ->relationship()
+                ->schema([
+                    TextInput::make('ukuran'),
+                ])->label('Ukuran Produk')
             ]);
     }
 
@@ -60,21 +76,21 @@ class ProdukResource extends Resource
         return $table
             ->description('Daftar produk hasil karya Teaching Factory di SMKN Balanipa')
             ->columns([
-                Tables\Columns\ImageColumn::make('gambar'),
+                Tables\Columns\ImageColumn::make('thumbnail'),
                 Tables\Columns\TextColumn::make('kategori.nama_kategori')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('nama')
                     ->searchable(),
-                Tables\Columns\ColorColumn::make('warna'),
+                Tables\Columns\TextColumn::make('brand.name'),
                 Tables\Columns\TextColumn::make('harga')
                     ->prefix('Rp. ')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('ukuran'),
-                Tables\Columns\TextColumn::make('bahan')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('qty')
-                    ->label('Stok / Jumlah')
+                Tables\Columns\TextColumn::make('ukuran_produk.ukuran'),
+                Tables\Columns\ImageColumn::make('foto_produk.foto')
+                    ,
+                Tables\Columns\TextColumn::make('stok')
+                    ->label('Stok')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('deleted_at')
