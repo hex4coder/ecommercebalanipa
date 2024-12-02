@@ -86,9 +86,10 @@ class ProdukResource extends Resource
                     ->prefix('Rp. ')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('ukuran_produk.ukuran'),
+                Tables\Columns\TextColumn::make('ukuran_produk.ukuran')
+                ->label('Ukuran'),
                 Tables\Columns\ImageColumn::make('foto_produk.foto')
-                    ,
+                ->label('Foto'),
                 Tables\Columns\TextColumn::make('stok')
                     ->label('Stok')
                     ->numeric()
@@ -112,11 +113,13 @@ class ProdukResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\RestoreAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                     Tables\Actions\ForceDeleteBulkAction::make(),
+                    Tables\Actions\RestoreBulkAction::make(),
                 ]),
             ]);
     }
@@ -135,5 +138,13 @@ class ProdukResource extends Resource
             'create' => Pages\CreateProduk::route('/create'),
             'edit' => Pages\EditProduk::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->withoutGlobalScopes([
+                SoftDeletingScope::class,
+            ]);
     }
 }
