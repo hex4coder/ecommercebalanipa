@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\PesananResource\Pages;
 use App\Filament\Resources\PesananResource\RelationManagers;
 use App\Models\Pesanan;
+use App\Models\Produk;
 use Filament\Forms;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
@@ -12,6 +13,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -46,13 +48,37 @@ class PesananResource extends Resource
                     ->label('Status Pesanan')
                     ->required(),
                 Repeater::make('detail')
+                    ->relationship()
                     ->schema([
                         Select::make('produk_id')
-                            ->relationship('detail.produk', 'nama')
+                            ->relationship('produk', 'nama')
                             ->label('Produk')
+                            ->reactive()
+                            ->afterStateUpdated(function ($state, callable $get, callable $set) {
+                                $produk = Produk::find($state);
+                                $set('harga', $produk->harga);
+
+                                $qty = $get('jumlah');
+
+                                if ($qty) {
+                                    $harga = $produk->harga;
+                                    $total = $harga * $qty;
+                                    $set('total', $total);
+                                }
+                            })
                             ->required(),
-                        TextInput::make('jumlah')->numeric()->required(),
-                        TextInput::make('total')->numeric()->required(),
+                        TextInput::make('harga')->prefix('Rp. ')->disabled(),
+                        TextInput::make('jumlah')
+                            ->reactive()
+                            ->afterStateUpdated(function ($state, callable $get, callable $set) {
+                                $harga = $get('harga');
+                                $qty = $state ?? 0;
+                                $total = $harga * $qty;
+                                $set('total', $total);
+                            })
+                            ->numeric()
+                            ->required(),
+                        TextInput::make('total')->numeric()->required()->readOnly(),
                     ]),
                 Forms\Components\Textarea::make('alasan_pembatalan')
                     ->label('Alasan Pembatalan')
@@ -64,11 +90,11 @@ class PesananResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('pelanggan_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('pelanggan.nama')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('tanggal')
                     ->dateTime()
+                    ->label('Tanggal Order')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('status'),
                 Tables\Columns\TextColumn::make('created_at')
@@ -82,13 +108,17 @@ class PesananResource extends Resource
             ])
             ->filters([
                 //
+                TrashedFilter::make(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\RestoreAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\ForceDeleteBulkAction::make(),
+                    Tables\Actions\RestoreBulkAction::make(),
                 ]),
             ]);
     }
@@ -107,5 +137,13 @@ class PesananResource extends Resource
             'create' => Pages\CreatePesanan::route('/create'),
             'edit' => Pages\EditPesanan::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->withoutGlobalScopes([
+                SoftDeletingScope::class,
+            ]);
     }
 }
