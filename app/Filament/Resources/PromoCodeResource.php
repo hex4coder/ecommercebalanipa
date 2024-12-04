@@ -48,8 +48,12 @@ class PromoCodeResource extends Resource
                 Forms\Components\TextInput::make('discount')
                     ->required()
                     ->numeric()
+                    ->validationMessages([
+                        'required' => 'Wajib diisi',
+                        'numeric' => 'Harus angka!'
+                    ])
                     ->label('Diskon')
-                    ->prefix('Rp. ')
+                    ->prefix('%/Rp. ')
                     ->default(1000),
             ]);
     }
@@ -60,11 +64,12 @@ class PromoCodeResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('code')
                     ->label('Kode Promo')
+                    ->copyable()
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('discount')
                     ->numeric()
-                    ->prefix('Rp. ')
+                    ->prefix('%/Rp. ')
                     ->label('Diskon')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')

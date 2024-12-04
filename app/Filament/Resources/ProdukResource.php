@@ -9,6 +9,7 @@ use Filament\Forms;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -32,47 +33,84 @@ class ProdukResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('kategori_id')
-                    ->relationship('kategori', 'nama_kategori')
-                    ->searchable()
-                    ->preload()
-                    ->required(),
-                Forms\Components\Select::make('brand_id')
-                    ->relationship('brand', 'name')
-                    ->searchable()
-                    ->preload()
-                    ->label('Merek')
-                    ->required(),
-                Forms\Components\TextInput::make('nama')
-                    ->required()
-                    ->label('Nama Produk'),
-                Forms\Components\TextInput::make('harga')
-                    ->prefix('Rp. ')
-                    ->required()
-                    ->numeric(),
-                    Forms\Components\TextInput::make('stok')
-                    ->label('Stok')
-                    ->required()
-                    ->numeric(),
-                    Forms\Components\Textarea::make('deskripsi')
-                        ->required()
-                        ,
-                    Checkbox::make('is_popular')->label('Tandai sebagai produk populer?')
-                    ,
-                Forms\Components\FileUpload::make('thumbnail')
-                    ->required()
-                    ->label('Thumbnail / Foto')
-                    ->columnSpanFull(),
-                Repeater::make('foto_produk')
-                ->relationship()
-                ->schema([
-                    FileUpload::make('foto')->required(),
-                ])->label('Foto Lainnya'),
-                Repeater::make('ukuran_produk')
-                ->relationship()
-                ->schema([
-                    TextInput::make('ukuran')->required(),
-                ])->label('Ukuran Produk')
+                Section::make("Produk")
+                    ->columns([
+                        'default' => 1,
+                        'xl' => 2,
+                    ])
+                    ->description("Masukkan data dengan benar!")
+                    ->schema([
+
+                        Forms\Components\TextInput::make('nama')
+                            ->required()
+                            ->validationMessages([
+                                'required' => 'Wajib diisi',
+                            ])
+                            ->label('Nama Produk'),
+                        Forms\Components\TextInput::make('harga')
+                            ->prefix('Rp. ')
+                            ->required()
+                            ->validationMessages([
+                                'required' => 'Wajib diisi',
+                            ])
+                            ->numeric(),
+                        Forms\Components\TextInput::make('stok')
+                            ->label('Stok')
+                            ->required()
+                            ->validationMessages([
+                                'required' => 'Wajib diisi',
+                                'numeric' => 'Harus angka!'
+                            ])
+                            ->numeric(),
+                        Forms\Components\Textarea::make('deskripsi')
+                            ->required(),
+                    ]),
+
+                Section::make("Informasi Tambahan")
+                    ->columns([
+                        'default' => 1,
+                        'xl' => 2
+                    ])
+                    ->description('Masukan informasi tambahan dengan benar')->schema([
+                        Forms\Components\Select::make('kategori_id')
+                            ->relationship('kategori', 'nama_kategori')
+                            ->searchable()
+                            ->preload()
+                            ->required(),
+                        Forms\Components\Select::make('brand_id')
+                            ->relationship('brand', 'name')
+                            ->searchable()
+                            ->preload()
+                            ->label('Merek')
+                            ->required(),
+                        Forms\Components\ToggleButtons::make('is_popular')
+                        ->boolean('Populer', 'Tidak Populer')
+                        ->grouped()
+                        ->default(false)
+                        ->label('Tandai sebagai produk populer?'),
+                        Forms\Components\FileUpload::make('thumbnail')
+                            ->required()
+                            ->label('Thumbnail / Foto'),
+                    ]),
+
+                Section::make("Size & Photos")
+                    ->description("Tambahkan foto produk dan ukuran produk.")
+                    ->columns([
+                        'default' => 1,
+                        'xl' => 2
+                    ])
+                    ->schema([
+                        Repeater::make('foto_produk')
+                            ->relationship()
+                            ->schema([
+                                FileUpload::make('foto')->required(),
+                            ])->label('Foto Lainnya'),
+                        Repeater::make('ukuran_produk')
+                            ->relationship()
+                            ->schema([
+                                TextInput::make('ukuran')->required(),
+                            ])->label('Ukuran Produk')
+                    ])
             ]);
     }
 
@@ -90,7 +128,7 @@ class ProdukResource extends Resource
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('ukuran_produk.ukuran')
-                ->label('Ukuran'),
+                    ->label('Ukuran'),
                 Tables\Columns\TextColumn::make('stok')
                     ->label('Stok')
                     ->numeric()
@@ -112,11 +150,11 @@ class ProdukResource extends Resource
                 //
                 TrashedFilter::make(),
                 SelectFilter::make('kategori_id')
-                ->label('Kategori')
-                ->relationship('kategori', 'nama_kategori'),
+                    ->label('Kategori')
+                    ->relationship('kategori', 'nama_kategori'),
                 SelectFilter::make('brand_id')
-                ->label('Merek')
-                ->relationship('brand', 'name')
+                    ->label('Merek')
+                    ->relationship('brand', 'name')
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

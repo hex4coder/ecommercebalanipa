@@ -15,8 +15,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('pesanan_id')->constrained('pesanan', 'id')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('produk_id')->constrained('produk', 'id')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->integer('jumlah')->min(1)->default(1);
-            $table->bigInteger('total');
+            $table->string('ukuran'); // ukuran produk
+            $table->string('keterangan')->nullable();
+            $table->unsignedBigInteger('harga');
+            $table->unsignedInteger('jumlah')->min(1)->default(1);
+            $table->unsignedBigInteger('total');
             $table->softDeletes();
             $table->timestamps();
         });

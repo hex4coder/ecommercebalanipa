@@ -17,9 +17,9 @@ return new class extends Migration
             $table->foreignId('brand_id')->constrained('brands', 'id')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('nama');
             $table->longText('deskripsi');
-            $table->bigInteger('harga');
+            $table->unsignedBigInteger('harga');
             $table->boolean('is_popular')->default(false);
-            $table->integer('stok');
+            $table->unsignedInteger('stok');
             $table->text('thumbnail');
             $table->softDeletes();
             $table->timestamps();
