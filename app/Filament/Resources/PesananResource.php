@@ -46,7 +46,7 @@ class PesananResource extends Resource
                         ])
                         ->afterValidation(
                             function ($state, callable $get, callable $set) {
-                                $total = $get('total_harga_produk') ?? 0;
+                                $total = 0;
                                 $details = $get('detail');
                                 if ($details) {
                                     foreach ($details as $key => $value) {
@@ -56,7 +56,6 @@ class PesananResource extends Resource
                                         }
                                     }
                                     $set('total_harga_produk', $total);
-                                    $set('total_diskon', 0);
                                     $set('total_bayar', $total);
                                 }
                             }
@@ -123,7 +122,7 @@ class PesananResource extends Resource
                                         ->validationMessages([
                                             'required' => 'Wajib diisi',
                                         ]),
-                                    Select::make('ukuran')
+                                    Select::make('ukuran') //TODO: Buat otomatis dari size produk
                                         ->options([
                                             's' => 'S',
                                             'm' => 'M',
@@ -143,8 +142,18 @@ class PesananResource extends Resource
                                             'required' => 'Wajib diisi',
                                             'numeric' => 'Harus angka!'
                                         ]),
-                                    TextInput::make('jumlah')
-                                        ->reactive()
+                                    TextInput::make('jumlah') // TODO: Buat otomatis sesuai stok produk
+                                        ->live()
+                                        ->afterStateHydrated(
+                                            function ($state, callable $get, callable $set) {
+                                                $productId = $get('produk_id') ?? 0;
+                                                $produk = Produk::find($productId);
+
+                                                if ($produk) {
+                                                    return $produk->stok;
+                                                }
+                                            }
+                                        )
                                         ->afterStateUpdated(function ($state, callable $get, callable $set) {
                                             $harga = $get('harga');
                                             if ($harga) {
@@ -154,10 +163,16 @@ class PesananResource extends Resource
                                             }
                                         })
                                         ->numeric()
+                                        ->minValue(1)
+                                        ->maxValue(
+                                            2
+                                        )
                                         ->required()
                                         ->validationMessages([
                                             'required' => 'Wajib diisi',
-                                            'numeric' => 'Harus angka!'
+                                            'numeric' => 'Harus angka!',
+                                            'min.numeric' => 'Jumlah tidak valid',
+                                            'max.numeric' => 'Jumlah tidak valid',
                                         ]),
                                     TextInput::make('total')->numeric()->required()->readOnly()->prefix('Rp. ')
                                         ->validationMessages([
@@ -260,13 +275,34 @@ class PesananResource extends Resource
                                     TextInput::make('code_promo')
                                         ->label('Kode Promo')
                                         ->live()
-                                        ->dehydrated(false)
+                                        ->beforeStateDehydrated(
+                                            function ($state, callable $get, callable $set) {
+                                                if ($state) {
+                                                    $promo = PromoCode::where('code', $state)->first();
+                                                    $total_harga_produk = $get('total_harga_produk') ?? 0;
+                                                    if ($promo) {
+                                                        $type = $promo->type;
+                                                        $discount = $promo->discount;
+                                                        $total_diskon = $discount;
+                                                        if ($type == 'percent') {
+                                                            $total_diskon = ($discount / 100) * $total_harga_produk;
+                                                        }
+                                                        $set('total_diskon', $total_diskon);
+                                                        $total_diskon = $get('total_diskon') ?? 0;
+                                                        $total_bayar = $total_harga_produk - $total_diskon;
+                                                        $set('total_bayar', $total_bayar);
+                                                    } else {
+                                                        $set('total_diskon', 0);
+                                                        $set('total_bayar', $total_harga_produk);
+                                                    }
+                                                }
+                                            }
+                                        )
                                         ->afterStateUpdated(function ($state, callable $get, callable $set) {
                                             if ($state) {
                                                 $promo = PromoCode::where('code', $state)->first();
                                                 $total_harga_produk = $get('total_harga_produk') ?? 0;
                                                 if ($promo) {
-                                                    $set('promo_codes_id', $promo->id);
                                                     $type = $promo->type;
                                                     $discount = $promo->discount;
                                                     $total_diskon = $discount;
@@ -278,14 +314,11 @@ class PesananResource extends Resource
                                                     $total_bayar = $total_harga_produk - $total_diskon;
                                                     $set('total_bayar', $total_bayar);
                                                 } else {
-                                                    $set('promo_codes_id', '');
                                                     $set('total_diskon', 0);
                                                     $set('total_bayar', $total_harga_produk);
                                                 }
                                             }
                                         })->helperText('Masukkan kode promo jika ada'),
-
-                                    Forms\Components\Hidden::make('promo_codes_id'),
 
                                     TextInput::make('total_diskon')
                                         ->label('Total Diskon')

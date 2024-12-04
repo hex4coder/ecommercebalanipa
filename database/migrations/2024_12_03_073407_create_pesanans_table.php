@@ -35,8 +35,8 @@ return new class extends Migration
             // pembayaran
             $table->text('bukti_transfer');
             $table->boolean('sudah_terbayar');
+            $table->string('code_promo')->nullable(); // kode promo
             $table->foreignId('pelanggan_id')->constrained('pelanggan', 'id')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId('promo_codes_id')->nullable()->constrained('promo_codes', 'id')->cascadeOnDelete()->cascadeOnUpdate();
 
 
             $table->softDeletes();
