@@ -20,6 +20,7 @@ class PromoCodeResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationLabel = 'Kode Promo';
     protected static ?string $navigationGroup = 'Penjualan';
+    protected static ?string $label = 'Kode Promo';
 
     public static function form(Form $form): Form
     {
@@ -27,8 +28,23 @@ class PromoCodeResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('code')
                     ->required()
+                    ->unique('promo_codes', 'code')
+                    ->validationMessages([
+                        'required' => 'Wajib diisi',
+                        'unique' => 'Kode promo sudah ada'
+                    ])
                     ->label('Kode Promo')
                     ->maxLength(255),
+                Forms\Components\Select::make('type')
+                ->options([
+                    'fixed' => 'Diskon Fix',
+                    'percent' => 'Diskon Persentase'
+                ])
+                ->required()
+                ->validationMessages([
+                    'required' => 'Wajib diisi'
+                ])
+                ->label('Tipe Promo'),
                 Forms\Components\TextInput::make('discount')
                     ->required()
                     ->numeric()
@@ -44,9 +60,12 @@ class PromoCodeResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('code')
                     ->label('Kode Promo')
+                    ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('discount')
                     ->numeric()
+                    ->prefix('Rp. ')
+                    ->label('Diskon')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -61,6 +80,7 @@ class PromoCodeResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
