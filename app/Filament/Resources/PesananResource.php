@@ -15,6 +15,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Filters\TrashedFilter;
@@ -382,7 +383,26 @@ class PesananResource extends Resource
                     ->dateTime()
                     ->label('Tanggal Order')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('status'),
+                Tables\Columns\SelectColumn::make('status')
+                ->options([
+                    'menunggu' => 'Menunggu',
+                    'sedang diproses' => 'Sedang Diproses',
+                    'sudah dikirim' => 'Sudah Dikirim',
+                    'selesai' => 'Selesai',
+                    'dibatalkan' => 'Dibatalkan',
+                ])
+                ->rules(['required'])
+                ->selectablePlaceholder(false)
+                ->beforeStateUpdated(function($record, $state) {
+                    // dd($state);
+                })
+                ->afterStateUpdated(function ($record, $state) {
+                    Notification::make()
+                    ->title("Status transaksi berhasil diperbarui")
+                    ->success()
+                    ->send();
+                })
+                ,
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
