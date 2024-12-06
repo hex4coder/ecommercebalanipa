@@ -6,12 +6,23 @@ use App\Livewire\LandingPage;
 use App\Livewire\Products;
 use App\Models\Brand;
 use App\Models\Kategori;
+use App\Models\Produk;
 use Illuminate\Support\Facades\Route;
 
 
 
 Route::get('/', LandingPage::class)->name('landing');
-Route::get('products', Products::class)->name('products.list');
+
+Route::prefix('products')->group(function() {
+    Route::get('/', Products::class)->name('products.list');
+    Route::get('/detail/{id}', function($id) {
+        // id product
+        $product = Produk::find($id);
+        if($product) {
+            dd($product);
+        }
+    })->name('product.detail');
+});
 
 
 // brands

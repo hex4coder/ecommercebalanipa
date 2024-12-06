@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
+use Illuminate\Support\Str;
 class Produk extends Model
 {
     use SoftDeletes;
@@ -35,5 +35,9 @@ class Produk extends Model
 
     public function detail() {
         return $this->hasMany(DetailPesanan::class, 'produk_id');
+    }
+
+    public function short_desc() {
+        return Str::substr($this->deskripsi, 0, 100) . '...';
     }
 }
