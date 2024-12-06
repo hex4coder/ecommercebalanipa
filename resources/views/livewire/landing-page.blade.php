@@ -135,4 +135,19 @@
         <!-- End Grid -->
     </div>
     <!-- End Hero -->
+
+
+
+    <div class="mt-10"></div>
+    <h2 class="text-3xl text-gray-800 font-bold lg:text-4xl dark:text-white text-center">
+        Daftar Merek
+    </h2>
+    @livewire('brands')
+
+
+    <div class="mt-10"></div>
+    <h2 class="text-3xl text-gray-800 font-bold lg:text-4xl dark:text-white text-center">
+        Kategori
+    </h2>
+    @livewire('categories')
 </div>
