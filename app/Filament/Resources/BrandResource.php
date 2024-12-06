@@ -32,14 +32,15 @@ class BrandResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('name')->label('Nama Merek')->placeholder('Masukkan nama merek.')
-                ->live(true)
-                ->afterStateUpdated(function($state, callable $get, callable $set) {
-                    $sl = Str::slug($state);
-                    $set('slug', $sl);
-                })
-                ,
-                TextInput::make('slug')->readOnly()->placeholder('Terisi otomatis...'),
+                TextInput::make('name')
+                    ->unique('brands', 'name', ignoreRecord: true)
+                    ->label('Nama Merek')->placeholder('Masukkan nama merek.')
+                    ->live(true)
+                    ->afterStateUpdated(function ($state, callable $set) {
+                        $sl = Str::slug($state);
+                        $set('slug', $sl);
+                    }),
+                TextInput::make('slug')->readOnly()->placeholder('Terisi otomatis...')->unique('brands', 'slug', ignoreRecord: true),
                 FileUpload::make('logo')->label('Logo')->columnSpanFull()
             ]);
     }
@@ -55,8 +56,11 @@ class BrandResource extends Resource
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\ViewAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+                ])
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

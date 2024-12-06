@@ -20,10 +20,18 @@
     </head>
 
     <body class="antialiased">
-        {{ $slot }}
+
+        <!-- navbar -->
+        @livewire('shared.navbar')
+
+        <main>
+            {{ $slot }}
+        </main>
+
+        @livewire('shared.footer')
+
 
         @livewire('notifications')
-
         @filamentScripts
         @vite('resources/js/app.js')
     </body>

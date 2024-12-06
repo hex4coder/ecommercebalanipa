@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\PesananResource\Pages;
-use App\Filament\Resources\PesananResource\RelationManagers;
 use App\Models\Pelanggan;
 use App\Models\Pesanan;
 use App\Models\Produk;
@@ -15,6 +14,8 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -72,19 +73,21 @@ class PesananResource extends Resource
                                 ]),
                             Select::make('status')
                                 ->options([
-                                    'menunggu' => 'Menunggu',
+                                    'baru' => 'Baru',
                                     'sedang diproses' => 'Sedang Diproses',
                                     'sudah dikirim' => 'Sudah Dikirim',
                                     'selesai' => 'Selesai',
                                     'dibatalkan' => 'Dibatalkan',
                                 ])
+                                ->live()
                                 ->label('Status Pesanan')
                                 ->required()
-                                ->default('menunggu')
+                                ->default('baru')
                                 ->validationMessages([
                                     'required' => 'Wajib diisi'
                                 ]),
                             Forms\Components\Textarea::make('alasan_pembatalan')
+                                ->visible(fn(Get $get) => $get('status') == 'dibatalkan')
                                 ->label('Alasan Pembatalan')->columnSpanFull(),
                             Repeater::make('detail')
                                 ->label('Daftar Produk yang dipilih')
@@ -98,6 +101,8 @@ class PesananResource extends Resource
                                         ->relationship('produk', 'nama')
                                         ->label('Produk')
                                         ->searchable()
+                                        ->distinct()
+                                        ->disableOptionsWhenSelectedInSiblingRepeaterItems()
                                         ->preload()
                                         ->live()
                                         ->afterStateUpdated(function ($state, callable $get, callable $set) {
@@ -132,6 +137,7 @@ class PesananResource extends Resource
                                             'xxl' => 'XXL',
                                             'xxxl' => 'XXXL',
                                         ])
+                                        ->default('xl')
                                         ->validationMessages([
                                             'required' => 'Wajib diisi',
                                         ])
@@ -212,43 +218,9 @@ class PesananResource extends Resource
                                     }
                                 }),
 
-                            TextInput::make('nama')->required()->readOnly()->validationMessages([
-                                'required' => 'Wajib diisi'
-                            ]),
-                            TextInput::make('email')
-                                ->email()
-                                ->required()->readOnly()->validationMessages([
-                                    'required' => 'Wajib diisi',
-                                    'email' => 'Email tidak valid',
-                                ]),
 
-                            TextInput::make('nomor_hp')->label('Nomor HP')->required()->readOnly()
-                                ->validationMessages([
-                                    'required' => 'Wajib diisi'
-                                ]),
-                            TextInput::make('kota')->required()->label('Kota / Kabupaten')
-                                ->validationMessages([
-                                    'required' => 'Wajib diisi'
-                                ])
-                                ->default("Polewali Mandar"),
-                            TextInput::make('kode_pos')->required()->numeric()->label('Kode POS')
-                                ->minLength(5)
-                                ->length(5)
-                                ->maxLength(5)
-                                ->default(91353)
-                                ->validationMessages([
-                                    'required' => 'Wajib diisi',
-                                    'numeric' => 'Harus angka',
-                                    'min_length' => 'Isi 5 digit kode pos',
-                                    'max_length' => 'Isi 5 digit kode pos',
-                                ]),
-                            Forms\Components\Textarea::make('alamat')->label('Alamat Lengkap')
-                                ->required()
-                                ->minLength(5)
-                                ->validationMessages([
-                                    'required' => 'Wajib diisi',
-                                    'min_length' => 'Alamat tidak lengkap',
-                                ])
+
+
 
                         ]),
 
@@ -385,7 +357,7 @@ class PesananResource extends Resource
                     ->sortable(),
                 Tables\Columns\SelectColumn::make('status')
                 ->options([
-                    'menunggu' => 'Menunggu',
+                    'baru' => 'Baru',
                     'sedang diproses' => 'Sedang Diproses',
                     'sudah dikirim' => 'Sudah Dikirim',
                     'selesai' => 'Selesai',
@@ -415,6 +387,19 @@ class PesananResource extends Resource
             ->filters([
                 //
                 TrashedFilter::make(),
+                Tables\Filters\SelectFilter::make('pelanggan')
+                ->label('Pelanggan / Customer')
+                ->relationship('pelanggan', 'nama'),
+
+                Tables\Filters\SelectFilter::make('status')
+                ->label('Status Pesanana')
+                ->options([
+                    'baru' => 'Baru',
+                    'sedang diproses' => 'Sedang Diproses',
+                    'sudah dikirim' => 'Sudah Dikirim',
+                    'selesai' => 'Selesai',
+                    'dibatalkan' => 'Dibatalkan',
+                ])
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
@@ -433,7 +418,7 @@ class PesananResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+
         ];
     }
 

@@ -7,6 +7,8 @@ use App\Filament\Resources\PromoCodeResource\RelationManagers;
 use App\Models\PromoCode;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -25,6 +27,10 @@ class PromoCodeResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
+            ->columns([
+                'default' => 1,
+                'xl' => 3,
+            ])
             ->schema([
                 Forms\Components\TextInput::make('code')
                     ->required()
@@ -41,6 +47,7 @@ class PromoCodeResource extends Resource
                     'percent' => 'Diskon Persentase'
                 ])
                 ->required()
+                ->live()
                 ->validationMessages([
                     'required' => 'Wajib diisi'
                 ])
@@ -53,7 +60,8 @@ class PromoCodeResource extends Resource
                         'numeric' => 'Harus angka!'
                     ])
                     ->label('Diskon')
-                    ->prefix('%/Rp. ')
+                    ->prefix(fn(Get $get) => $get('type') === 'percent' ? null : 'Rp. ')
+                    ->suffix(fn(Get $get) => $get('type') === 'percent' ? '%' : null)
                     ->default(1000),
             ]);
     }
@@ -69,7 +77,8 @@ class PromoCodeResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('discount')
                     ->numeric()
-                    ->prefix('%/Rp. ')
+                    ->prefix(fn(PromoCode $record) => $record->type === 'percent' ? null : 'Rp. ')
+                    ->suffix(fn(PromoCode $record) => $record->type === 'percent' ? '%' : null)
                     ->label('Diskon')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')

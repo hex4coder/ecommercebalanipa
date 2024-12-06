@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('nama');
             $table->string('nomor_hp');
             $table->longText('alamat');
-            $table->longText('profil');
+            $table->longText('profil')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

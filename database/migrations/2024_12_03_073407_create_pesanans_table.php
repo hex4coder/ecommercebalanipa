@@ -18,19 +18,13 @@ return new class extends Migration
             // product transactions
             // $table->string('booking_trx_id'); // BALA
             $table->dateTime('tanggal');
-            $table->enum('status', ['menunggu', 'sedang diproses', 'sudah dikirim', 'selesai', 'dibatalkan'])->default('menunggu');
+            $table->enum('status', ['baru', 'sedang diproses', 'sudah dikirim', 'selesai', 'dibatalkan'])->default('baru');
             $table->longText('alasan_pembatalan')->nullable();
             $table->unsignedBigInteger('total_harga_produk'); // total dari semua harga produk
             $table->unsignedBigInteger('total_diskon');
             $table->unsignedBigInteger('total_bayar');
 
-            // costumer info
-            $table->string('nama');
-            $table->string('email');
-            $table->string('nomor_hp');
-            $table->string('kota');
-            $table->string('kode_pos');
-            $table->text('alamat');
+
 
             // pembayaran
             $table->text('bukti_transfer');
