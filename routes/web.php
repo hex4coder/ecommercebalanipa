@@ -13,8 +13,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', LandingPage::class)->name('landing');
 
-Route::prefix('products')->group(function() {
-    Route::get('/', Products::class)->name('products.list');
+Route::prefix('product')->group(function() {
+    Route::get('/', Products::class)->name('product.list');
     Route::get('/detail/{id}', function($id) {
         // id product
         $product = Produk::find($id);
@@ -48,5 +48,11 @@ Route::prefix('kategori')->group(function() {
             return redirect('/products?selectedCategories[0]=' . $kat->id);
         }
     });
+});
+
+// cart / keranjang belanja
+Route::prefix('keranjang')->group(function() {
+    Route::get('/', function() {})->name('keranjang.index');
+    Route::get('/detail', function() {})->name('keranjang.detail');
 });
 require __DIR__.'/auth.php';

@@ -53,7 +53,7 @@ class KategoriResource extends Resource
                 TextInput::make('slug')
                 ->required()
                 ->disabled()
-                ->dehydrated(false),
+                ->dehydrated(),
 
 
 

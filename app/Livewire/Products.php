@@ -19,6 +19,7 @@ class Products extends Component
     public function mount()
     {
         $this->products = Produk::query()
+        ->orderBy('brand_id', 'asc')
         ->get();
 
 

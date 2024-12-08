@@ -10,9 +10,11 @@
                 <div class="flex justify-between items-center gap-x-3">
                     <div class="grow">
                         <div class="flex items-center gap-x-3">
-                            <img class="size-[38px] rounded-full"
-                                src="{{ asset('storage/' . $kat->gambar) }}"
-                                alt="Avatar">
+                            @if ($kat->gambar)
+                                <img class="size-[38px] rounded-full"
+                                    src="{{ asset('storage/' . $kat->gambar) }}"
+                                    alt="Avatar">
+                            @endif
                             <div class="grow">
                                 <h3
                                     class="group-hover:text-blue-600 font-semibold text-gray-800 dark:group-hover:text-neutral-400 dark:text-neutral-200">

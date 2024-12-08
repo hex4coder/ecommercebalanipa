@@ -4,19 +4,19 @@
         <!-- Grid -->
         <div class="grid md:grid-cols-2 gap-4 md:gap-8 xl:gap-20 md:items-center">
             <div>
-                <h1 class="block text-3xl font-bold text-gray-800 sm:text-4xl lg:text-6xl lg:leading-tight dark:text-white">Start your journey with <span class="text-blue-600">Preline</span></h1>
-                <p class="mt-3 text-lg text-gray-800 dark:text-neutral-400">Hand-picked professionals and expertly crafted components, designed for any kind of entrepreneur.</p>
+                <h1 class="block text-3xl font-bold text-gray-800 sm:text-4xl lg:leading-tight dark:text-white">Produk Lokal Berkualitas, Langsung dari <span class="text-blue-600">UPTD SMKN Balanipa</span></h1>
+                <p class="mt-5 text-gray-800 dark:text-neutral-400">
+                    Dapatkan produk-produk terbaik, langsung dari tangan pengrajin muda Indonesia. Kami bangga mempersembahkan hasil karya siswa SMK Negeri Balanipa yang dibuat dengan bahan-bahan lokal berkualitas tinggi.
+                    Dengan membeli produk kami, Anda tidak hanya mendapatkan barang yang unik, tetapi juga mendukung ekonomi lokal dan pelestarian lingkungan. Mari bersama-sama wujudkan Indonesia yang lebih mandiri dan berdaya saing!
+                </p>
 
                 <!-- Buttons -->
-                <div class="mt-7 grid gap-3 w-full sm:inline-flex">
-                    <a class="py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none" href="#">
-                        Get started
+                <div class="mt-10 grid gap-3 w-full sm:inline-flex">
+                    <a wire:navigate href="{{route('product.list')}}" class="py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
+                        Mulai Belanja!
                         <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="m9 18 6-6-6-6" />
                         </svg>
-                    </a>
-                    <a class="py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-800 dark:focus:bg-neutral-800" href="#">
-                        Contact sales team
                     </a>
                 </div>
                 <!-- End Buttons -->
