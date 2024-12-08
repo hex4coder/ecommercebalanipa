@@ -1,4 +1,4 @@
-<header class="flex flex-wrap md:justify-start md:flex-nowrap z-50 w-full bg-blue-600">
+<header class="sticky top-0 left-0 flex flex-wrap md:justify-start md:flex-nowrap z-50 w-full bg-blue-600">
   <nav class="relative max-w-[66rem] w-full md:flex md:items-center md:justify-between md:gap-3 mx-auto px-4 sm:px-6 lg:px-8 py-2">
     <!-- Logo w/ Collapse Button -->
     <div class="flex items-center justify-between">
@@ -45,7 +45,7 @@
           {{-- halaman cart --}}
           <a wire:navigate href="{{route('keranjang.index')}}" class="p-2 flex items-center text-sm hover:text-white focus:outline-none focus:text-white {{request()->is('keranjang*') ? 'text-white font-semibold' : 'text-white/80'}}">
             <svg class="shrink-0 size-4 me-3 md:me-2 block md:hidden" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>
-            Keranjang Belanja <span class="inline-block ml-2 bg-white/30 p-1 text-xs rounded-full text-white">0</span>
+            Keranjang Belanja @livewire('cart.total-item-badge')
           </a>
 
 

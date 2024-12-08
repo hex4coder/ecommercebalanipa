@@ -1,5 +1,6 @@
 <?php
 
+use App\Helpers\CartHelper;
 use App\Livewire\Brands;
 use App\Livewire\Categories;
 use App\Livewire\LandingPage;
@@ -33,7 +34,7 @@ Route::prefix('brand')->group(function() {
         $brand = Brand::query()->where('slug', $slug)->first();
         if($brand) {
             // redirect to product with brand filter
-            return redirect('/products?selectedBrand[0]=' . $brand->id);
+            return redirect('/product?selectedBrand[0]=' . $brand->id);
         }
     });
 });
@@ -45,14 +46,17 @@ Route::prefix('kategori')->group(function() {
         // cari kategori dengan slug
         $kat = Kategori::query()->where('slug', $slug)->first();
         if($kat) {
-            return redirect('/products?selectedCategories[0]=' . $kat->id);
+            return redirect('/product?selectedCategories[0]=' . $kat->id);
         }
     });
 });
 
 // cart / keranjang belanja
 Route::prefix('keranjang')->group(function() {
-    Route::get('/', function() {})->name('keranjang.index');
+    Route::get('/', function() {
+        CartHelper::clearCart();
+        return redirect()->back();
+    })->name('keranjang.index');
     Route::get('/detail', function() {})->name('keranjang.detail');
 });
 require __DIR__.'/auth.php';

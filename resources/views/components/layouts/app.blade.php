@@ -7,8 +7,11 @@
         <title>{{ config('app.name') . ' | ' .  ($title ?? 'beranda')  }}</title>
         @vite('resources/css/app.css')
         @livewireStyles
+
+
     </head>
     <body class="bg-white  dark:bg-slate-700">
+
         @livewire('shared.navbar')
         <main>
             {{ $slot }}
@@ -16,5 +19,8 @@
         @livewire('shared.footer')
         @livewireScripts
         @vite('resources/js/app.js')
+
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <x-livewire-alert::scripts />
     </body>
 </html>

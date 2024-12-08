@@ -10,7 +10,7 @@
       <div class="mt-3">
         <p class="text-gray-500 dark:text-neutral-500">Sistem Pemasaran Produk untuk hasil karya Peserta Didik dari Teaching Factory <a class="text-blue-600 decoration-2 hover:underline focus:outline-none focus:underline font-medium dark:text-blue-500" href="#">UPTD SMKN Balanipa</a></p>
         <p class="text-gray-500 dark:text-neutral-500">
-          Copyright © 2025 By : Ardan with Teams.
+          Copyright © 2025 Design and Programmed By : Ardan.
         </p>
       </div>
 
