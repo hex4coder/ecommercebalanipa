@@ -4,6 +4,7 @@ use App\Helpers\CartHelper;
 use App\Livewire\Brands;
 use App\Livewire\Categories;
 use App\Livewire\LandingPage;
+use App\Livewire\ProductDetail;
 use App\Livewire\Products;
 use App\Models\Brand;
 use App\Models\Kategori;
@@ -16,13 +17,7 @@ Route::get('/', LandingPage::class)->name('landing');
 
 Route::prefix('product')->group(function() {
     Route::get('/', Products::class)->name('product.list');
-    Route::get('/detail/{id}', function($id) {
-        // id product
-        $product = Produk::find($id);
-        if($product) {
-            dd($product);
-        }
-    })->name('product.detail');
+    Route::get('/detail/{id}', ProductDetail::class)->name('product.detail');
 });
 
 

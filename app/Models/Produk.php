@@ -29,6 +29,10 @@ class Produk extends Model
         return $this->hasMany(UkuranProduk::class, 'produk_id');
     }
 
+    public function ukuran() {
+        return $this->ukuran_produk()->pluck('ukuran')->join(", ");
+    }
+
     public function kategori() {
         return $this->belongsTo(Kategori::class, 'id');
     }
