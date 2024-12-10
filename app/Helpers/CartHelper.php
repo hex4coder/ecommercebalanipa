@@ -50,6 +50,40 @@ class CartHelper
         return $total;
     }
 
+    public static function getTotalByProductId($productId)
+    {
+        $cart = Session::get('cart', []);
+
+        if (isset($cart[$productId])) {
+            return $cart[$productId]['price'] * $cart[$productId]['quantity'];
+        }
+
+        return 0;
+    }
+
+    public static function increment($productId)
+    {
+        $cart = Session::get('cart', []);
+
+        if (isset($cart[$productId])) {
+            $cart[$productId]['quantity']++;
+            Session::put('cart', $cart);
+        }
+    }
+
+    public static function decrement($productId)
+    {
+        $cart = Session::get('cart', []);
+
+        if (isset($cart[$productId]) && $cart[$productId]['quantity'] > 1) {
+            $cart[$productId]['quantity']--;
+            Session::put('cart', $cart);
+        } else {
+            // Jika kuantitas sudah 1 atau produk tidak ada, hapus dari cart
+            self::remove($productId);
+        }
+    }
+
     public static function getTotalItem() {
         return count(Session::get('cart', [])) ?? 0;
     }

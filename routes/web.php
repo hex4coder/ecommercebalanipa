@@ -3,6 +3,7 @@
 use App\Helpers\CartHelper;
 use App\Livewire\Brands;
 use App\Livewire\Categories;
+use App\Livewire\KeranjangBelanja;
 use App\Livewire\LandingPage;
 use App\Livewire\ProductDetail;
 use App\Livewire\Products;
@@ -48,10 +49,7 @@ Route::prefix('kategori')->group(function() {
 
 // cart / keranjang belanja
 Route::prefix('keranjang')->group(function() {
-    Route::get('/', function() {
-        CartHelper::clearCart();
-        return redirect()->back();
-    })->name('keranjang.index');
+    Route::get('/', KeranjangBelanja::class)->name('keranjang.index');
     Route::get('/detail', function() {})->name('keranjang.detail');
 });
 require __DIR__.'/auth.php';
