@@ -236,15 +236,18 @@
             <div class="lg:col-span-3">
                 <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 
-                    @foreach ($products as $product)
 
 
-                    @livewire('product-item', [
-                        'product' => $product
-                    ])
-
-
-                    @endforeach
+                    @forelse ($products as $product)
+                        @livewire('product-item', [
+                            'product' => $product
+                        ])
+                    @empty
+                        <div class="w-full lg:col-span-3 sm:col-span-2 min-h-[10rem] flex justify-center items-center gap-6 flex-col">
+                            <img class="w-[10rem]" src="{{asset('img/empty-product.svg')}}" alt="empty product image" />
+                            <h3 class="text-sm text-slate-700">Belum ada produk.</h3>
+                        </div>
+                    @endforelse
                 </ul>
             </div>
         </div>
