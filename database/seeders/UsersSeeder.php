@@ -16,6 +16,7 @@ class UsersSeeder extends Seeder
         $defaultUser = new User();
         $defaultUser->name = "Darwis";
         $defaultUser->email = "darwis@smknbalanipa.sch.id";
+        $defaultUser->role = 0; // administrator
         $defaultUser->password = bcrypt("12345678");
         $defaultUser->save();
     }
