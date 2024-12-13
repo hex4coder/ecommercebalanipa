@@ -5,6 +5,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <title>{{ config('app.name') . ' | ' .  ($title ?? 'beranda')  }}</title>
+
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
         @vite('resources/css/app.css')
         @livewireStyles
 
