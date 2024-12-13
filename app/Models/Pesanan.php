@@ -14,8 +14,8 @@ class Pesanan extends Model
     protected $guarded = [];
 
 
-    public function pelanggan() {
-        return $this->belongsTo(Pelanggan::class, 'id');
+    public function user() {
+        return $this->belongsTo(User::class);
     }
 
     public function detail() {

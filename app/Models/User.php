@@ -21,6 +21,7 @@ class User extends Authenticatable implements FilamentUser
      * @var array<int, string>
      */
     protected $fillable = [
+        'id',
         'name',
         'email',
         'password',
@@ -60,5 +61,17 @@ class User extends Authenticatable implements FilamentUser
 
     public function address() {
         return $this->hasOne(Address::class);
+    }
+
+    public function pesanan() {
+        return $this->hasMany(Pesanan::class, 'user_id');
+    }
+
+    public function full_address() {
+        $address = Address::where('user_id', $this->id)->first();
+        if($address) {
+            return $address->jalan . " " . $address->dusun . " Desa/Kel. " . $address->desa . " Kec. " . $address->kecamatan . ", " . $address->kota . " Provinsi " . $address->provinsi . " Kode Pos " . $address->kodepos . "\nNomor Telpon: " . $address->nomorhp;
+        }
+        return "Tidak ada alamat";
     }
 }

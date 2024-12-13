@@ -7,6 +7,7 @@ use App\Models\Pelanggan;
 use App\Models\Pesanan;
 use App\Models\Produk;
 use App\Models\PromoCode;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
@@ -59,6 +60,7 @@ class PesananResource extends Resource
                                     }
                                     $set('total_harga_produk', $total);
                                     $set('total_bayar', $total);
+                                    $set('total_diskon', 0);
                                 }
                             }
                         )
@@ -195,33 +197,38 @@ class PesananResource extends Resource
                         ->completedIcon('heroicon-m-hand-thumb-up')
                         ->columns([
                             'default' => 1,
-                            'xl' => 2,
                         ])
                         ->schema([
-                            Forms\Components\Select::make('pelanggan_id')
+                            Forms\Components\Select::make('user_id')
                                 ->searchable()
+                                ->relationship(
+                                    'user',
+                                    'name',
+                                    modifyQueryUsing: fn(Builder $query) => $query->where('role', 1)->with(['address']),
+                                )
+                                ->label('Pelanggan')
                                 ->preload()
-                                ->relationship('pelanggan', 'nama')
                                 ->required()
                                 ->validationMessages([
                                     'required' => 'Wajib diisi'
                                 ])
                                 ->live()
-                                ->afterStateUpdated(function ($state, callable $get, callable $set) {
-                                    $customer = Pelanggan::find($state);
+                                ->afterStateUpdated(function ($state, Set $set) {
+                                    $set('full_address', '');
+                                    $customer = User::find($state);
 
                                     if ($customer) {
-                                        $set('email', $customer->email);
-                                        $set('nama', $customer->nama);
-                                        $set('nomor_hp', $customer->nomor_hp);
-                                        $set('alamat', $customer->alamat);
+                                        $set('full_address', $customer->full_address());
                                     }
                                 }),
 
 
-
-
-
+                            Forms\Components\Textarea::make('full_address')
+                            ->formatStateUsing(fn() => $form->getOperation() != 'create' ? $form->getRecord()->user->full_address() : "")
+                            ->label('Alamat Lengkap')
+                            ->required()
+                            ->rows(5)
+                            ->disabled(),
                         ]),
 
                     Forms\Components\Wizard\Step::make('Pembayaran')
@@ -326,12 +333,15 @@ class PesananResource extends Resource
                                     ToggleButtons::make('sudah_terbayar')
                                         ->boolean('Ya', 'Belum')
                                         ->grouped()
+                                        ->live()
                                         ->default(false)
                                         ->label('Apakah sudah terbayar?'),
 
                                     FileUpload::make('bukti_transfer')
                                         ->label('Bukti Pembayaran')
-                                        ->required()->validationMessages([
+                                        ->visible(fn(Get $get) => $get('sudah_terbayar') == true)
+                                        ->required(fn(Get $get) => $get('sudah_terbayar') == true)
+                                        ->validationMessages([
                                             'required' => 'Wajib diisi',
                                         ]),
 
@@ -347,34 +357,40 @@ class PesananResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('nama')
+                Tables\Columns\TextColumn::make('user.name')->label('Customer/Pelanggan')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('detail.produk.nama')
                     ->sortable(),
+                Tables\Columns\IconColumn::make('sudah_terbayar')
+                ->label('Sudah Terbayar')
+                ->boolean()
+                ->color(fn(bool $state): string => match ($state) {
+                    true => 'success',
+                    false => 'warning',
+                }),
                 Tables\Columns\TextColumn::make('tanggal')
                     ->dateTime()
                     ->label('Tanggal Order')
                     ->sortable(),
                 Tables\Columns\SelectColumn::make('status')
-                ->options([
-                    'baru' => 'Baru',
-                    'sedang diproses' => 'Sedang Diproses',
-                    'sudah dikirim' => 'Sudah Dikirim',
-                    'selesai' => 'Selesai',
-                    'dibatalkan' => 'Dibatalkan',
-                ])
-                ->rules(['required'])
-                ->selectablePlaceholder(false)
-                ->beforeStateUpdated(function($record, $state) {
-                    // dd($state);
-                })
-                ->afterStateUpdated(function ($record, $state) {
-                    Notification::make()
-                    ->title("Status transaksi berhasil diperbarui")
-                    ->success()
-                    ->send();
-                })
-                ,
+                    ->options([
+                        'baru' => 'Baru',
+                        'sedang diproses' => 'Sedang Diproses',
+                        'sudah dikirim' => 'Sudah Dikirim',
+                        'selesai' => 'Selesai',
+                        'dibatalkan' => 'Dibatalkan',
+                    ])
+                    ->rules(['required'])
+                    ->selectablePlaceholder(false)
+                    ->beforeStateUpdated(function ($record, $state) {
+                        // dd($state);
+                    })
+                    ->afterStateUpdated(function ($record, $state) {
+                        Notification::make()
+                            ->title("Status transaksi berhasil diperbarui")
+                            ->success()
+                            ->send();
+                    }),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -388,23 +404,30 @@ class PesananResource extends Resource
                 //
                 TrashedFilter::make(),
                 Tables\Filters\SelectFilter::make('pelanggan')
-                ->label('Pelanggan / Customer')
-                ->relationship('pelanggan', 'nama'),
+                    ->label('Pelanggan / Customer')
+                    ->relationship(
+                        'user',
+                        'name',
+                        modifyQueryUsing: fn(Builder $query) => $query->where('role', 1),
+                    ),
 
                 Tables\Filters\SelectFilter::make('status')
-                ->label('Status Pesanana')
-                ->options([
-                    'baru' => 'Baru',
-                    'sedang diproses' => 'Sedang Diproses',
-                    'sudah dikirim' => 'Sudah Dikirim',
-                    'selesai' => 'Selesai',
-                    'dibatalkan' => 'Dibatalkan',
-                ])
+                    ->label('Status Pesanan')
+                    ->options([
+                        'baru' => 'Baru',
+                        'sedang diproses' => 'Sedang Diproses',
+                        'sudah dikirim' => 'Sudah Dikirim',
+                        'selesai' => 'Selesai',
+                        'dibatalkan' => 'Dibatalkan',
+                    ])
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\RestoreAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+                    Tables\Actions\RestoreAction::make(),
+                ]),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -417,9 +440,7 @@ class PesananResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-
-        ];
+        return [];
     }
 
     public static function getPages(): array
