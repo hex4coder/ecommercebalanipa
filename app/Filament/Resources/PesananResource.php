@@ -61,6 +61,27 @@ class PesananResource extends Resource
                                     $set('total_harga_produk', $total);
                                     $set('total_bayar', $total);
                                     $set('total_diskon', 0);
+
+                                    $promoCode = $get('code_promo');
+                                    if ($promoCode) {
+                                        $promo = PromoCode::where('code', $promoCode)->first();
+                                        $total_harga_produk = $get('total_harga_produk') ?? 0;
+                                        if ($promo) {
+                                            $type = $promo->type;
+                                            $discount = $promo->discount;
+                                            $total_diskon = $discount;
+                                            if ($type == 'percent') {
+                                                $total_diskon = ($discount / 100) * $total_harga_produk;
+                                            }
+                                            $set('total_diskon', $total_diskon);
+                                            $total_diskon = $get('total_diskon') ?? 0;
+                                            $total_bayar = $total_harga_produk - $total_diskon;
+                                            $set('total_bayar', $total_bayar);
+                                        } else {
+                                            $set('total_diskon', 0);
+                                            $set('total_bayar', $total_harga_produk);
+                                        }
+                                    }
                                 }
                             }
                         )
@@ -224,11 +245,11 @@ class PesananResource extends Resource
 
 
                             Forms\Components\Textarea::make('full_address')
-                            ->formatStateUsing(fn() => $form->getOperation() != 'create' ? $form->getRecord()->user->full_address() : "")
-                            ->label('Alamat Lengkap')
-                            ->required()
-                            ->rows(5)
-                            ->disabled(),
+                                ->formatStateUsing(fn() => $form->getOperation() != 'create' ? $form->getRecord()->user->full_address() : "")
+                                ->label('Alamat Lengkap')
+                                ->required()
+                                ->rows(5)
+                                ->disabled(),
                         ]),
 
                     Forms\Components\Wizard\Step::make('Pembayaran')
@@ -362,12 +383,12 @@ class PesananResource extends Resource
                 Tables\Columns\TextColumn::make('detail.produk.nama')
                     ->sortable(),
                 Tables\Columns\IconColumn::make('sudah_terbayar')
-                ->label('Sudah Terbayar')
-                ->boolean()
-                ->color(fn(bool $state): string => match ($state) {
-                    true => 'success',
-                    false => 'warning',
-                }),
+                    ->label('Sudah Terbayar')
+                    ->boolean()
+                    ->color(fn(bool $state): string => match ($state) {
+                        true => 'success',
+                        false => 'warning',
+                    }),
                 Tables\Columns\TextColumn::make('tanggal')
                     ->dateTime()
                     ->label('Tanggal Order')
