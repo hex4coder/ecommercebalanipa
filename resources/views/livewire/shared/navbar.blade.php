@@ -52,7 +52,7 @@
           {{-- jika belum terautentikasi muncuklkan ini --}}
           <!-- Button Group -->
           <div class="relative flex flex-wrap items-center gap-x-1.5 md:ps-2.5 mt-1 md:mt-0 md:ms-1.5 before:block before:absolute before:top-1/2 before:-start-px before:w-px before:h-4 before:bg-white/30 before:-translate-y-1/2">
-            <a wire:navigate class="p-2 w-full flex items-center text-sm hover:text-white focus:outline-none focus:text-white {{request()->is('login*') ? 'text-white font-semibold' : 'text-white/80'}}">
+            <a wire:navigate href="{{ route('auth.login') }}" class="p-2 w-full flex items-center text-sm hover:text-white focus:outline-none focus:text-white {{request()->is('login*') ? 'text-white font-semibold' : 'text-white/80'}}">
               <svg class="shrink-0 size-4 me-3 md:me-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
               Log in
             </a>

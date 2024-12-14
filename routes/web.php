@@ -1,6 +1,7 @@
 <?php
 
-use App\Helpers\CartHelper;
+use App\Livewire\Auth\Login;
+use App\Livewire\Auth\Register;
 use App\Livewire\Brands;
 use App\Livewire\Categories;
 use App\Livewire\KeranjangBelanja;
@@ -9,12 +10,13 @@ use App\Livewire\ProductDetail;
 use App\Livewire\Products;
 use App\Models\Brand;
 use App\Models\Kategori;
-use App\Models\Produk;
 use Illuminate\Support\Facades\Route;
 
 
 
 Route::get('/', LandingPage::class)->name('landing');
+Route::get('/login', Login::class)->name('auth.login');
+Route::get('/register', Register::class)->name('auth.register');
 
 Route::prefix('product')->group(function() {
     Route::get('/', Products::class)->name('product.list');
@@ -52,4 +54,4 @@ Route::prefix('keranjang')->group(function() {
     Route::get('/', KeranjangBelanja::class)->name('keranjang.index');
     Route::get('/detail', function() {})->name('keranjang.detail');
 });
-require __DIR__.'/auth.php';
+// require __DIR__.'/auth.php';
