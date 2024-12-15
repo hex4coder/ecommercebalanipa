@@ -1,4 +1,4 @@
-<div class="flex flex-col items-center justify-center w-full py-20 gap-2">
+<div class="flex flex-col items-center justify-center w-full py-20 gap-2 bg-blue-50">
     <img src="{{ asset('img/logo.png') }}" class="w-32" alt="logo">
     <div
         class="mt-7 bg-white border border-slate-200 rounded-xl shadow-sm dark:bg-neutral-900 dark:border-neutral-700 md:min-w-[400px]">

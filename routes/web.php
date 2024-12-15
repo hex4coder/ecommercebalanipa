@@ -15,9 +15,11 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', LandingPage::class)->name('landing');
-Route::get('/login', Login::class)->name('auth.login');
-Route::get('/register', Register::class)->name('auth.register');
+Route::get('/login', Login::class)->name('auth.login')->middleware(['guest']);
+Route::get('/register', Register::class)->name('auth.register')->middleware(['guest']);
 
+
+// products detail
 Route::prefix('product')->group(function() {
     Route::get('/', Products::class)->name('product.list');
     Route::get('/detail/{id}', ProductDetail::class)->name('product.detail');

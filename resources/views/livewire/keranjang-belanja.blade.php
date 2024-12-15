@@ -1,4 +1,4 @@
-<div class="grid grid-cols-1 gap-8 p-14 w-full bg-blue-100">
+<div class="grid grid-cols-1 gap-8 p-14 w-full bg-blue-50">
     <h1 class="text-2xl font-semibold text-slate-700">Belanjaan Anda!</h1>
     <div class="grid grid-cols-1 gap-4 md:gap-8 md:grid-cols-3">
         {{-- cart items --}}

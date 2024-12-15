@@ -1,9 +1,10 @@
 
 **Website**
-1. Membuat tampilan checkout
-2. Membuat tampilan login dan register pengguna (customer)
-3. Buat API untuk android app
-4. Buat filter pada tampilan list produk dicostumer
+1. Membuat login pengguna #beres
+2. Membuat halaman register #onprogress
+3. Membuat tampilan checkout
+4. Buat API untuk android app
+5. Buat filter pada tampilan list produk untuk costumer
 
 **Android App**
 1. Buat splash screen dengan menampilkan bio sekolah

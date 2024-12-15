@@ -10,8 +10,7 @@
 
         @vite('resources/css/app.css')
         @livewireStyles
-
-
+        @filamentStyles
     </head>
     <body class="bg-white  dark:bg-slate-700">
 
@@ -21,6 +20,7 @@
         </main>
         @livewire('shared.footer')
         @livewireScripts
+        @filamentScripts
         @vite('resources/js/app.js')
 
         <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
