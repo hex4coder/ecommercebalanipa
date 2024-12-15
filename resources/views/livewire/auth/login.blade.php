@@ -49,8 +49,8 @@
                         <div>
                             <div class="flex justify-between items-center">
                                 <label for="password" class="block text-sm mb-2 dark:text-white">Password</label>
-                                <a class="inline-flex items-center gap-x-1 text-sm text-blue-600 decoration-2 hover:underline focus:outline-none focus:underline font-medium dark:text-blue-500"
-                                    href="../examples/html/recover-account.html">Lupa password?</a>
+                                <a wire:click='forgotPassword' class="inline-flex items-center gap-x-1 text-sm text-blue-600 decoration-2 hover:underline focus:outline-none focus:underline font-medium dark:text-blue-500"
+                                    href="#">Lupa password?</a>
                             </div>
                             <div class="relative">
                                 <input wire:model='password' type="password" id="password" name="password"

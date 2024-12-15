@@ -36,7 +36,16 @@ class Login extends Component
         return view('livewire.auth.login');
     }
 
-
+    //TODO: Membuat fitur forgot password
+    public function forgotPassword() {
+        $this->alert('info', 'Fitur belum tersedia.', [
+            'position' => 'center',
+            'toast' => false,
+            'showConfirmButton' => true,
+            'confirmButtonText' => 'Ok',
+            'confirmButtonColor' => '#1D4ED8',
+        ]);
+    }
 
     public function login() {
         $credentials = $this->validate();
