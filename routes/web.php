@@ -1,5 +1,7 @@
 <?php
 
+use App\Filament\CustomerPanel\Resources\CustomerResource;
+use App\Http\Middleware\CustomerMiddleware;
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\Register;
 use App\Livewire\Brands;
@@ -18,6 +20,13 @@ Route::get('/', LandingPage::class)->name('landing');
 Route::get('/login', Login::class)->name('auth.login')->middleware(['guest']);
 Route::get('/register', Register::class)->name('auth.register')->middleware(['guest']);
 
+
+// customer panel
+// Route::prefix('customer-panel')->group(function() {
+//     Route::get('/', CustomerResource::class);
+//     // Route::get('/pesanan', PesananCustomerResource::class);
+//     // Route::get('/profile', ProfileCustomerResource::class);
+// })->middleware(['auth', CustomerMiddleware::class]);
 
 // products detail
 Route::prefix('product')->group(function() {
