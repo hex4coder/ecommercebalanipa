@@ -7,6 +7,7 @@ use App\Models\Pesanan;
 use Filament\Tables\Actions\Action;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Actions\ActionGroup;
@@ -63,6 +64,9 @@ class MyOrdersResource extends Resource
                         'heroicon-o-check-badge' => static fn($state): bool => $state === 'selesai',
                         'heroicon-o-x-circle' => static fn($state): bool => $state === 'dibatalkan',
                     ]),
+                TextColumn::make('alasan_pembatalan')
+                ->toggleable()
+                ->toggledHiddenByDefault(true),
                 TextColumn::make('sudah_terbayar')
                     ->label('Verifikasi Pembayaran')
                     ->badge()
@@ -103,6 +107,7 @@ class MyOrdersResource extends Resource
                 // Tables\Actions\ViewAction::make(),
                 // Tables\Actions\EditAction::make(),
                 ActionGroup::make([
+                    
                     Action::make('batalkan')
                         ->visible(fn(Pesanan $record) => $record->status != 'dibatalkan')
                         ->label("Batalkan Pesanan")
@@ -120,6 +125,10 @@ class MyOrdersResource extends Resource
                             $record->status = 'dibatalkan';
                             $record->alasan_pembatalan = $data['alasan_pembatalan'];
                             $record->save();
+                            Notification::make('cancelled')
+                            ->danger()
+                            ->title('Pesanan berhasil dibatalkan')
+                            ->send();
                         }),
                     Action::make('invoice')
                         ->label("Lihat Invoice")

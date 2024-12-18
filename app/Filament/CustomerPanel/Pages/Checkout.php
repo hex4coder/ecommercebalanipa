@@ -239,8 +239,7 @@ class Checkout extends Page implements HasForms
 
         // file upload
         $uploaded_temp_file = ($this->data['bukti_transfer'])[$upload_key[0]];
-        $bukti = $uploaded_temp_file->storePublicly('pesanan');
-        ;
+        $bukti = $uploaded_temp_file->storePublicly();
         $order->bukti_transfer = $bukti;
 
         if ($this->code != '' && session()->has('code_success')) {

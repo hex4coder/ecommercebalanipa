@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\PesananResource\Pages;
+use App\Filament\Resources\PesananResource\Pages\ImageViewModal;
 use App\Models\Pelanggan;
 use App\Models\Pesanan;
 use App\Models\Produk;
@@ -378,40 +379,44 @@ class PesananResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('user.name')->label('Customer/Pelanggan')
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('detail.produk.nama')
-                    ->sortable(),
-                Tables\Columns\IconColumn::make('sudah_terbayar')
-                    ->label('Sudah Terbayar')
-                    ->boolean()
-                    ->color(fn(bool $state): string => match ($state) {
-                        true => 'success',
-                        false => 'warning',
-                    }),
                 Tables\Columns\TextColumn::make('tanggal')
                     ->dateTime()
-                    ->label('Tanggal Order')
+                    ->label('Tanggal Pemesanan')
                     ->sortable(),
-                Tables\Columns\SelectColumn::make('status')
-                    ->options([
-                        'baru' => 'Baru',
-                        'sedang diproses' => 'Sedang Diproses',
-                        'sudah dikirim' => 'Sudah Dikirim',
-                        'selesai' => 'Selesai',
-                        'dibatalkan' => 'Dibatalkan',
+                Tables\Columns\TextColumn::make('user.name')->label('Customer/Pelanggan')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('status')
+                    ->label('Status Pesanan')
+                    ->badge()
+                    ->colors([
+                        'primary' => static fn($state): bool => $state === 'sedang diproses',
+                        'primary' => static fn($state): bool => $state === 'sudah dikirim',
+                        'warning' => static fn($state): bool => $state === 'baru',
+                        'success' => static fn($state): bool => $state === 'selesai',
+                        'danger' => static fn($state): bool => $state === 'dibatalkan',
                     ])
-                    ->rules(['required'])
-                    ->selectablePlaceholder(false)
-                    ->beforeStateUpdated(function ($record, $state) {
-                        // dd($state);
-                    })
-                    ->afterStateUpdated(function ($record, $state) {
-                        Notification::make()
-                            ->title("Status transaksi berhasil diperbarui")
-                            ->success()
-                            ->send();
-                    }),
+                    ->icons([
+                        'heroicon-o-cog' => static fn($state): bool => $state === 'sedang diproses',
+                        'heroicon-o-truck' => static fn($state): bool => $state === 'sudah dikirim',
+                        'heroicon-o-document-arrow-up' => static fn($state): bool => $state === 'baru',
+                        'heroicon-o-check-badge' => static fn($state): bool => $state === 'selesai',
+                        'heroicon-o-x-circle' => static fn($state): bool => $state === 'dibatalkan',
+                    ]),
+                Tables\Columns\TextColumn::make('alasan_pembatalan')
+                    ->toggleable()
+                    ->toggledHiddenByDefault(true),
+                Tables\Columns\TextColumn::make('sudah_terbayar')
+                    ->label('Verifikasi Pembayaran')
+                    ->badge()
+                    ->icons([
+                        'heroicon-o-x-circle' => static fn($state): bool => $state === 0,
+                        'heroicon-o-check-badge' => static fn($state): bool => $state === 1,
+                    ])
+                    ->colors([
+                        'danger' => static fn($state): bool => $state === 0,
+                        'success' => static fn($state): bool => $state === 1,
+                    ])
+                    ->formatStateUsing(fn($state) => $state ? 'Terverifikasi' : 'Belum Diverifikasi'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -432,29 +437,96 @@ class PesananResource extends Resource
                         modifyQueryUsing: fn(Builder $query) => $query->where('role', 1),
                     ),
 
-                Tables\Filters\SelectFilter::make('status')
+                Tables\Filters\SelectFilter::make("status")
                     ->label('Status Pesanan')
                     ->options([
-                        'baru' => 'Baru',
-                        'sedang diproses' => 'Sedang Diproses',
-                        'sudah dikirim' => 'Sudah Dikirim',
-                        'selesai' => 'Selesai',
-                        'dibatalkan' => 'Dibatalkan',
-                    ])
+                        'baru',
+                        'sedang diproses',
+                        'sudah dikirim',
+                        'selesai',
+                        'dibatalkan'
+                    ]),
+
+
+                Tables\Filters\TernaryFilter::make('sudah_terbayar')
+                    ->label('Verifikasi Pembayaran')
+                    ->placeholder("Semua")
+                    ->falseLabel("Belum diverifikasi")
+                    ->trueLabel("Sudah diverifikasi")
+                    ->queries(
+                        true: fn(Builder $query) => $query->where('sudah_terbayar', 1),
+                        false: fn(Builder $query) => $query->where('sudah_terbayar', 0)
+                    ),
             ])
             ->actions([
                 Tables\Actions\ActionGroup::make([
-                    Tables\Actions\ViewAction::make(),
-                    Tables\Actions\EditAction::make(),
-                    Tables\Actions\DeleteAction::make(),
-                    Tables\Actions\RestoreAction::make(),
+                    Tables\Actions\Action::make('bukti_transfer')
+                        ->visible(fn(Pesanan $record) => $record->sudah_terbayar == 0 || $record->status == 'baru')
+                        ->label("Lihat Bukti Transfer")
+                        ->icon('heroicon-o-eye')
+                        ->color('warning')
+                        ->mountUsing(function(Form $form, Pesanan $record) {
+                            $form->fill([
+                                'bukti_transfer' => $record->bukti_transfer,
+                            ]);
+                        })
+                        ->form([
+                            FileUpload::make('bukti_transfer')->disabled(true)
+                            ,
+                        ])
+                        ->slideOver()
+                        ->modalSubmitAction(false)
+                        ,
+                    Tables\Actions\Action::make('verifikasi')
+                        ->visible(fn(Pesanan $record) => $record->sudah_terbayar == false)
+                        ->label("Verifikasi Pembayaran")
+                        ->modalDescription('Pastikan anda telah melihat bukti pembayaran, lanjutkan dan proses pesanan?')
+                        ->color('warning')
+                        ->icon('heroicon-m-check-badge')
+                        ->requiresConfirmation()
+                        ->action(function (Pesanan $record): void {
+                            $record->sudah_terbayar = 1;
+                            $record->status = 'sedang diproses';
+                            $record->save();
+                            Notification::make('verified')
+                                ->title('Pembayaran telah diverifikasi dan pesanan sedang diproses')
+                                ->success()
+                                ->send();
+                        }),
+                    Tables\Actions\Action::make('batalkan')
+                        ->visible(fn(Pesanan $record) => $record->status == 'baru' && $record->sudah_terbayar == false)
+                        ->label("Batalkan Pesanan")
+                        ->form([
+                            TextInput::make('alasan_pembatalan')->required()->minLength(10)
+                                ->validationMessages([
+                                    'required' => 'Wajib diisi',
+                                    'min_length' => 'Tidak valid',
+                                ])
+                        ])
+                        ->color('danger')
+                        ->icon('heroicon-m-x-circle')
+                        ->requiresConfirmation()
+                        ->action(function (array $data, Pesanan $record): void {
+                            $record->status = 'dibatalkan';
+                            $record->alasan_pembatalan = $data['alasan_pembatalan'];
+                            $record->save();
+                            Notification::make('cancelled')
+                                ->title('Pesanan berhasil dibatalkan')
+                                ->danger()
+                                ->send();
+                        }),
+                    Tables\Actions\Action::make('invoice')
+                        ->label("Lihat Invoice")
+                        ->icon('heroicon-o-document')
+                        ->color('primary')
+                        ->url(fn(Pesanan $record) => route('filament.admin.resources.pesanan.invoice', $record)),
                 ]),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\ForceDeleteBulkAction::make(),
-                    Tables\Actions\RestoreBulkAction::make(),
+                    // Tables\Actions\DeleteBulkAction::make(),
+                    // Tables\Actions\ForceDeleteBulkAction::make(),
+                    // Tables\Actions\RestoreBulkAction::make(),
                 ]),
             ]);
     }
@@ -468,8 +540,10 @@ class PesananResource extends Resource
     {
         return [
             'index' => Pages\ListPesanans::route('/'),
-            'create' => Pages\CreatePesanan::route('/create'),
-            'edit' => Pages\EditPesanan::route('/{record}/edit'),
+            // 'create' => Pages\CreatePesanan::route('/create'),
+            // 'edit' => Pages\EditPesanan::route('/{record}/edit'),
+            'invoice' => Pages\InvoiceCustomer::route('/{record}/invoice'),
+            // 'bukti-transfer' => Pages\ImageViewModal::route('/{record}/bukti-transfer'),
         ];
     }
 
