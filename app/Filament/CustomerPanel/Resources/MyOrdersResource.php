@@ -11,9 +11,15 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Number;
 
 class MyOrdersResource extends Resource
 {
@@ -35,20 +41,82 @@ class MyOrdersResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->query(Pesanan::query()->where('user_id', Auth::user()->id))
             ->columns([
-                //
+                TextColumn::make('tanggal')
+                    ->label('Tanggal Pemesanan')
+                    ->dateTime()
+                    ->formatStateUsing(fn($state) => $state),
+                TextColumn::make('total_bayar')
+                    ->label('Total Harga')
+                    ->formatStateUsing(fn($state) => Number::currency($state, 'Rp.', 'ID')),
+                TextColumn::make('status')
+                    ->label('Status Pesanan')
+                    ->badge()
+                    ->colors([
+                        'primary' => static fn($state): bool => $state === 'sedang diproses',
+                        'primary' => static fn($state): bool => $state === 'sudah dikirim',
+                        'warning' => static fn($state): bool => $state === 'baru',
+                        'success' => static fn($state): bool => $state === 'selesai',
+                        'danger' => static fn($state): bool => $state === 'dibatalkan',
+                    ])
+                    ->icons([
+                        'heroicon-o-cog' => static fn($state): bool => $state === 'sedang diproses',
+                        'heroicon-o-truck' => static fn($state): bool => $state === 'sudah dikirim',
+                        'heroicon-o-document-arrow-up' => static fn($state): bool => $state === 'baru',
+                        'heroicon-o-check-badge' => static fn($state): bool => $state === 'selesai',
+                        'heroicon-o-x-circle' => static fn($state): bool => $state === 'dibatalkan',
+                    ]),
+                TextColumn::make('sudah_terbayar')
+                    ->label('Verifikasi Pembayaran')
+                    ->badge()
+                    ->icons([
+                        'heroicon-o-x-circle' => static fn($state): bool => $state === 0,
+                        'heroicon-o-check-badge' => static fn($state): bool => $state === 1,
+                    ])
+                    ->colors([
+                        'danger' => static fn($state): bool => $state === 0,
+                        'success' => static fn($state): bool => $state === 1,
+                    ])
+                    ->formatStateUsing(fn($state) => $state ? 'Terverifikasi' : 'Belum Diverifikasi')
             ])
             ->filters([
                 //
+                SelectFilter::make("status")
+                    ->label('Status Pesanan')
+                    ->options([
+                        'baru',
+                        'sedang diproses',
+                        'sudah dikirim',
+                        'selesai',
+                        'dibatalkan'
+                    ]),
+
+
+                TernaryFilter::make('sudah_terbayar')
+                    ->label('Verifikasi Pembayaran')
+                    ->placeholder("Semua")
+                    ->falseLabel("Belum diverifikasi")
+                    ->trueLabel("Sudah diverifikasi")
+                    ->queries(
+                        true: fn(Builder $query) => $query->where('sudah_terbayar', 1),
+                        false: fn(Builder $query) => $query->where('sudah_terbayar', 0)
+                    ),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                // Tables\Actions\ViewAction::make(),
+                // Tables\Actions\EditAction::make(),
+                Action::make('invoice')
+                ->label("Lihat Invoice")
+                ->icon('heroicon-o-document')
+                ->color('primary')
+                ->url(fn(Pesanan $record)=>route('filament.customer.resources.pesanan-saya.invoice', $record))
+                ,
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                // Tables\Actions\BulkActionGroup::make([
+                //     Tables\Actions\DeleteBulkAction::make(),
+                // ]),
             ])
             ->emptyStateIcon('heroicon-o-shopping-cart')
             ->emptyStateHeading('Belum ada pesanan')
@@ -81,6 +149,7 @@ class MyOrdersResource extends Resource
             'create' => Pages\CreateMyOrders::route('/create'),
             'view' => Pages\ViewMyOrders::route('/{record}'),
             'edit' => Pages\EditMyOrders::route('/{record}/edit'),
+            'invoice' => Pages\Invoice::route('/{record}/invoice')
         ];
     }
 }
