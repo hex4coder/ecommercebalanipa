@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use App\Models\Produk;
 use Illuminate\Support\Facades\Session;
 
 class CartHelper
@@ -96,5 +97,10 @@ class CartHelper
     public static function clearCart()
     {
         Session::forget('cart');
+    }
+
+    public static function getImageUrl($id) {
+        $product = Produk::find($id);
+        return asset('storage/' . $product->thumbnail );
     }
 }

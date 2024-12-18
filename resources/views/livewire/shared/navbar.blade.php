@@ -84,9 +84,19 @@
               <a href="@if(auth()->user()->role == 0) {{route('filament.admin.pages.dashboard')}} @else {{route('filament.customer.pages.dashboard')}} @endif" class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-slate-800 hover:bg-slate-100 focus:outline-none focus:bg-slate-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700 dark:focus:text-neutral-300">
                 <i class='bx bxs-cart-download'></i> Dashboard Saya
               </a>
-              <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-slate-800 hover:bg-slate-100 focus:outline-none focus:bg-slate-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700 dark:focus:text-neutral-300" href="#">
+
+              {{-- khusus customer --}}
+              @if (auth()->user()->role == 1)
+              <a href="{{ route('filament.customer.pages.profile') }}" class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-slate-800 hover:bg-slate-100 focus:outline-none focus:bg-slate-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700 dark:focus:text-neutral-300">
                 <i class='bx bxs-user-detail' ></i> Profil
               </a>
+
+              <a href="{{ route('filament.customer.resources.pesanan-saya.index') }}" class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-slate-800 hover:bg-slate-100 focus:outline-none focus:bg-slate-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700 dark:focus:text-neutral-300">
+                <i class='bx bx-cart-download'></i> Pesanan Saya
+              </a>
+
+              @endif
+
               <a wire:click='logout' wire:navigate class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-red-700 hover:bg-slate-100 focus:outline-none focus:bg-slate-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700 dark:focus:text-neutral-300 bg-red-50 font-semibold" href="#">
                 Logout <i class='bx bx-exit' ></i>
               </a>

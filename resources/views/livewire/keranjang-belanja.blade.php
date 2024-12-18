@@ -5,7 +5,7 @@
         <div class="bg-white p-4 md:p-14 rounded-md shadow-md md:col-span-2 relative">
             @if ($totalBiaya > 0)
                 <button wire:click='ClearCart'
-                    class="bg-red-600 hover:bg-red-600 text-white px-2 py-1 rounded-md shadow-sm absolute top-4 right-4"><i
+                    class="bg-red-600 hover:bg-red-600 text-white px-2 py-1 rounded-md shadow-sm absolute bottom-4 right-4"><i
                         class='bx bxs-trash'></i>
                     Kosongkan!</button>
             @endif
@@ -94,10 +94,11 @@
 
         {{-- payment card --}}
         @if ($totalBiaya > 0)
-            <div>
-                <div class="bg-white p-4 rounded-md shadow-sm">
+        <div>
+                @livewire('checkout')
+                {{-- <div class="bg-white p-4 rounded-md shadow-sm">
                     <h2>payments</h2>
-                </div>
+                </div> --}}
             </div>
         @endif
     </div>

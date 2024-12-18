@@ -41,7 +41,7 @@ class BrandResource extends Resource
                         $set('slug', $sl);
                     }),
                 TextInput::make('slug')->readOnly()->placeholder('Terisi otomatis...')->unique('brands', 'slug', ignoreRecord: true),
-                FileUpload::make('logo')->label('Logo')->columnSpanFull()
+                FileUpload::make('logo')->label('Logo')->columnSpanFull()->image()->imageEditor()
             ]);
     }
 

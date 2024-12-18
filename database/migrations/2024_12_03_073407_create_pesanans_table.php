@@ -24,8 +24,6 @@ return new class extends Migration
             $table->unsignedBigInteger('total_diskon');
             $table->unsignedBigInteger('total_bayar');
 
-
-
             // pembayaran
             $table->text('bukti_transfer')->nullable();
             $table->boolean('sudah_terbayar');

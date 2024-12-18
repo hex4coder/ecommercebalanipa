@@ -90,6 +90,8 @@ class ProdukResource extends Resource
                         ->label('Tandai sebagai produk populer?'),
                         Forms\Components\FileUpload::make('thumbnail')
                             ->required()
+                            ->image()
+                            ->imageEditor()
                             ->label('Thumbnail / Foto'),
                     ]),
 
@@ -103,7 +105,7 @@ class ProdukResource extends Resource
                         Repeater::make('foto_produk')
                             ->relationship()
                             ->schema([
-                                FileUpload::make('foto')->required(),
+                                FileUpload::make('foto')->required()->image()->imageEditor(),
                             ])->label('Foto Lainnya'),
                         Repeater::make('ukuran_produk')
                             ->relationship()

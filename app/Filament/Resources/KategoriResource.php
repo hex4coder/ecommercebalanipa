@@ -58,6 +58,8 @@ class KategoriResource extends Resource
 
 
                 FileUpload::make('gambar')
+                ->image()
+                ->imageEditor()
                 ->label('Gambar')
                 ->columnSpanFull(),
 
@@ -74,12 +76,7 @@ class KategoriResource extends Resource
                 ->sortable()
                 ->searchable(),
                 TextColumn::make('slug')
-                ->sortable()
-                ,
-
-
-
-
+                ->sortable(),
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
