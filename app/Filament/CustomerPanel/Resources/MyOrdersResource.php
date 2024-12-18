@@ -3,21 +3,17 @@
 namespace App\Filament\CustomerPanel\Resources;
 
 use App\Filament\CustomerPanel\Resources\MyOrdersResource\Pages;
-use App\Filament\CustomerPanel\Resources\MyOrdersResource\RelationManagers;
-use App\Models\MyOrders;
 use App\Models\Pesanan;
 use Filament\Tables\Actions\Action;
-use Filament\Forms;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\Filter;
+use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Number;
 
@@ -106,12 +102,31 @@ class MyOrdersResource extends Resource
             ->actions([
                 // Tables\Actions\ViewAction::make(),
                 // Tables\Actions\EditAction::make(),
-                Action::make('invoice')
-                ->label("Lihat Invoice")
-                ->icon('heroicon-o-document')
-                ->color('primary')
-                ->url(fn(Pesanan $record)=>route('filament.customer.resources.pesanan-saya.invoice', $record))
-                ,
+                ActionGroup::make([
+                    Action::make('batalkan')
+                        ->visible(fn(Pesanan $record) => $record->status != 'dibatalkan')
+                        ->label("Batalkan Pesanan")
+                        ->form([
+                            TextInput::make('alasan_pembatalan')->required()->minLength(10)
+                            ->validationMessages([
+                                'required' => 'Wajib diisi',
+                                'min_length' => 'Tidak valid',
+                            ])
+                        ])
+                        ->color('danger')
+                        ->icon('heroicon-m-x-circle')
+                        ->requiresConfirmation()
+                        ->action(function (array $data, Pesanan $record): void {
+                            $record->status = 'dibatalkan';
+                            $record->alasan_pembatalan = $data['alasan_pembatalan'];
+                            $record->save();
+                        }),
+                    Action::make('invoice')
+                        ->label("Lihat Invoice")
+                        ->icon('heroicon-o-document')
+                        ->color('primary')
+                        ->url(fn(Pesanan $record) => route('filament.customer.resources.pesanan-saya.invoice', $record)),
+                ]),
             ])
             ->bulkActions([
                 // Tables\Actions\BulkActionGroup::make([
@@ -146,9 +161,6 @@ class MyOrdersResource extends Resource
     {
         return [
             'index' => Pages\ListMyOrders::route('/'),
-            'create' => Pages\CreateMyOrders::route('/create'),
-            'view' => Pages\ViewMyOrders::route('/{record}'),
-            'edit' => Pages\EditMyOrders::route('/{record}/edit'),
             'invoice' => Pages\Invoice::route('/{record}/invoice')
         ];
     }

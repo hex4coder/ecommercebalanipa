@@ -1,6 +1,7 @@
 <?php
 
 use App\Filament\CustomerPanel\Resources\CustomerResource;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Middleware\CustomerMiddleware;
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\Register;
@@ -14,6 +15,9 @@ use App\Models\Brand;
 use App\Models\Kategori;
 use Illuminate\Support\Facades\Route;
 
+
+// test invoice
+// Route::get('/invoice/{orderId}', [InvoiceController::class, 'download'])->name('invoice.download');
 
 
 Route::get('/', LandingPage::class)->name('landing');

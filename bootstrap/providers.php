@@ -5,4 +5,5 @@ return [
     App\Providers\Filament\AdminPanelProvider::class,
     App\Providers\Filament\CustomerPanelProvider::class,
     App\Providers\VoltServiceProvider::class,
+    \Barryvdh\DomPDF\ServiceProvider::class,
 ];
