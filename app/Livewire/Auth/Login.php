@@ -64,6 +64,13 @@ class Login extends Component
                     session()->regenerate();
                     $this->alert('success', 'Login berhasil');
                     sleep(1);
+                    if($user->role == 0) {
+                        // super admin
+                        return redirect('/admin');
+                    } else if($user->role == 1) {
+                        // customer
+                        return redirect('/customer-panel');
+                    }
                     return redirect()->intended('/');
                 }
                 // 5. redirect ke halaman /

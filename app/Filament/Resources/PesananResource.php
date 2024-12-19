@@ -493,6 +493,35 @@ class PesananResource extends Resource
                                 ->success()
                                 ->send();
                         }),
+                        Tables\Actions\Action::make('kirim')
+                        ->visible(fn(Pesanan $record) => $record->status == 'sedang diproses')
+                        ->label("Kirim Pesanan")
+                        ->color('warning')
+                        ->icon('heroicon-m-truck')
+                        ->requiresConfirmation()
+                        ->action(function (Pesanan $record): void {
+                            $record->status = 'sudah dikirim';
+                            $record->save();
+                            Notification::make('verified')
+                                ->title('Pesanan telah dikirim.')
+                                ->success()
+                                ->send();
+                        }),
+
+                        Tables\Actions\Action::make('selesai')
+                        ->visible(fn(Pesanan $record) => $record->status == 'sudah dikirim')
+                        ->label("Sudah Sampai")
+                        ->color('success')
+                        ->icon('heroicon-m-check')
+                        ->requiresConfirmation()
+                        ->action(function (Pesanan $record): void {
+                            $record->status = 'selesai';
+                            $record->save();
+                            Notification::make('verified')
+                                ->title('Pesanan telah selesai.')
+                                ->success()
+                                ->send();
+                        }),
                     Tables\Actions\Action::make('batalkan')
                         ->visible(fn(Pesanan $record) => $record->status == 'baru' && $record->sudah_terbayar == false)
                         ->label("Batalkan Pesanan")
