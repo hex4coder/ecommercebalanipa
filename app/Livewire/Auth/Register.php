@@ -22,20 +22,20 @@ class Register extends Component implements HasForms
 
 
     // biodata customer
-    public $name = 'Kaco Jirris';
-    public $email = 'kaco@anu.com';
-    public $password = '12345678';
-    public $password_confirmation = '12345678';
+    public $name = '';
+    public $email = '';
+    public $password = '';
+    public $password_confirmation = '';
 
     // alamat lengkap customer
-    public $nomorhp = '082280802208';
-    public $provinsi = 'Sulawesi Barat';
-    public $kota = 'Polewali Mandar';
-    public $kecamatan = 'Luyo';
-    public $desa = 'Baru';
-    public $dusun = 'Malise';
-    public $jalan = 'Jalan Poros Mambu';
-    public $kodepos = '91353';
+    public $nomorhp = '';
+    public $provinsi = '';
+    public $kota = '';
+    public $kecamatan = '';
+    public $desa = '';
+    public $dusun = '';
+    public $jalan = '';
+    public $kodepos = '';
 
     // TODO: Membuat register user / costumer
     public function form(Form $form): Form

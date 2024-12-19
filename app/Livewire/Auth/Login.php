@@ -76,10 +76,10 @@ class Login extends Component
                 // 5. redirect ke halaman /
             } else {
                 // user tidak bisa login, password salah
-                session()->flash('message', 'Password tidak benar!');
+                session()->flash('message', 'Kredential tidak valid');
             }
         } else {
-            session()->flash('message', 'Email anda belum terdaftar dalam sistem kami.');
+            session()->flash('message', 'Kredensial tidak valid.');
             // tidak ada email
         }
     }
