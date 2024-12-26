@@ -26,6 +26,7 @@ class CustomerPanelProvider extends PanelProvider
         return $panel
             ->id('customer')
             ->path('customer-panel')
+            ->login()
             ->topNavigation()
             ->colors([
                 'primary' => Color::Blue,
