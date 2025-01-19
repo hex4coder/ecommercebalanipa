@@ -16,4 +16,15 @@ class EditProduk extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
+
+
+
+    protected function afterFill() {
+        // delete the current id element
+        ?>
+        <script>
+            document.getElementById('id').remove();  
+        </script>
+        <?
+    }
 }
