@@ -3,8 +3,10 @@
 namespace App\Filament\Resources\ProdukResource\Pages;
 
 use App\Filament\Resources\ProdukResource;
+use App\Models\Produk;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
+use Illuminate\Database\Eloquent\Model;
 
 class EditProduk extends EditRecord
 {
@@ -17,10 +19,13 @@ class EditProduk extends EditRecord
         ];
     }
 
+    protected function handleRecordUpdate(Model $record, array $data): Model
+    {
+        $produkId =  $record->getOriginal('id');
+        $p = Produk::find($produkId);
 
+        $p->update($data);
 
-    public function update($data) {
-        dd($data);
-        parent::update($data);
+        return $p;
     }
 }
