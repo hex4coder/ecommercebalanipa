@@ -21,6 +21,6 @@ class EditProduk extends EditRecord
 
     protected function afterFill() {
         // delete the current id element
-        echo $this->form;
+        dd($this->form);
     }
 }
