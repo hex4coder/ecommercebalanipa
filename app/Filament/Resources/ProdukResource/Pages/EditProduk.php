@@ -19,8 +19,8 @@ class EditProduk extends EditRecord
 
 
 
-    protected function afterFill() {
-        // delete the current id element
-        dd($this->form);
+    public function update($data) {
+        dd($data);
+        parent::update($data);
     }
 }
