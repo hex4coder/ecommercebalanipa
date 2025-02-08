@@ -18,6 +18,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Str;
+
 class KategoriResource extends Resource
 {
     protected static ?string $model = Kategori::class;
@@ -36,32 +37,33 @@ class KategoriResource extends Resource
             ->schema([
                 //
                 TextInput::make('nama_kategori')
-                ->required()
-                ->unique('kategori', 'nama_kategori', ignoreRecord: true)
-                ->label('Kategori')
-                ->live(onBlur: true)
-                ->afterStateUpdated(function($state, Set $set) {
-                    if($state) {
-                        $set('slug', Str::slug($state));
-                    }
-                })
-                ->validationMessages([
-                    'unique' => 'Kategori sudah ada'
-                ]),
+                    ->required()
+                    ->unique('kategori', 'nama_kategori', ignoreRecord: true)
+                    ->label('Kategori')
+                    ->live(onBlur: true)
+                    ->afterStateUpdated(function ($state, Set $set) {
+                        if ($state) {
+                            $set('slug', Str::slug($state));
+                        }
+                    })
+                    ->validationMessages([
+                        'unique' => 'Kategori sudah ada'
+                    ]),
 
 
                 TextInput::make('slug')
-                ->required()
-                ->disabled()
-                ->dehydrated(),
+                    ->required()
+                    ->disabled()
+                    ->dehydrated(),
 
 
 
                 FileUpload::make('gambar')
-                ->image()
-                ->imageEditor()
-                ->label('Gambar')
-                ->columnSpanFull(),
+                    ->image()
+                    ->optimize('webp')
+                    ->imageEditor()
+                    ->label('Gambar')
+                    ->columnSpanFull(),
 
             ]);
     }
@@ -72,11 +74,11 @@ class KategoriResource extends Resource
             ->columns([
                 ImageColumn::make('gambar'),
                 TextColumn::make('nama_kategori')
-                ->label('Nama Kategori')
-                ->sortable()
-                ->searchable(),
+                    ->label('Nama Kategori')
+                    ->sortable()
+                    ->searchable(),
                 TextColumn::make('slug')
-                ->sortable(),
+                    ->sortable(),
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),

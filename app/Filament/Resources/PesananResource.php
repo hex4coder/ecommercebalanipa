@@ -363,6 +363,8 @@ class PesananResource extends Resource
                                         ->label('Bukti Pembayaran')
                                         ->visible(fn(Get $get) => $get('sudah_terbayar') == true)
                                         ->required(fn(Get $get) => $get('sudah_terbayar') == true)
+                                        ->image()
+                                        ->optimize('webp')
                                         ->validationMessages([
                                             'required' => 'Wajib diisi',
                                         ]),
@@ -465,18 +467,16 @@ class PesananResource extends Resource
                         ->label("Lihat Bukti Transfer")
                         ->icon('heroicon-o-eye')
                         ->color('warning')
-                        ->mountUsing(function(Form $form, Pesanan $record) {
+                        ->mountUsing(function (Form $form, Pesanan $record) {
                             $form->fill([
                                 'bukti_transfer' => $record->bukti_transfer,
                             ]);
                         })
                         ->form([
-                            FileUpload::make('bukti_transfer')->disabled(true)
-                            ,
+                            FileUpload::make('bukti_transfer')->disabled(true),
                         ])
                         ->slideOver()
-                        ->modalSubmitAction(false)
-                        ,
+                        ->modalSubmitAction(false),
                     Tables\Actions\Action::make('verifikasi')
                         ->visible(fn(Pesanan $record) => $record->sudah_terbayar == false)
                         ->label("Verifikasi Pembayaran")
@@ -493,7 +493,7 @@ class PesananResource extends Resource
                                 ->success()
                                 ->send();
                         }),
-                        Tables\Actions\Action::make('kirim')
+                    Tables\Actions\Action::make('kirim')
                         ->visible(fn(Pesanan $record) => $record->status == 'sedang diproses')
                         ->label("Kirim Pesanan")
                         ->color('warning')
@@ -508,7 +508,7 @@ class PesananResource extends Resource
                                 ->send();
                         }),
 
-                        Tables\Actions\Action::make('selesai')
+                    Tables\Actions\Action::make('selesai')
                         ->visible(fn(Pesanan $record) => $record->status == 'sudah dikirim')
                         ->label("Sudah Sampai")
                         ->color('success')

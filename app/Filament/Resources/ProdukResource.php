@@ -84,14 +84,15 @@ class ProdukResource extends Resource
                             ->label('Merek')
                             ->required(),
                         Forms\Components\ToggleButtons::make('is_popular')
-                        ->boolean('Populer', 'Tidak Populer')
-                        ->grouped()
-                        ->default(false)
-                        ->label('Tandai sebagai produk populer?'),
+                            ->boolean('Populer', 'Tidak Populer')
+                            ->grouped()
+                            ->default(false)
+                            ->label('Tandai sebagai produk populer?'),
                         Forms\Components\FileUpload::make('thumbnail')
                             ->required()
                             ->image()
                             ->imageEditor()
+                            ->optimize('webp')
                             ->label('Thumbnail / Foto'),
                     ]),
 
@@ -105,7 +106,11 @@ class ProdukResource extends Resource
                         Repeater::make('foto_produk')
                             ->relationship()
                             ->schema([
-                                FileUpload::make('foto')->required()->image()->imageEditor(),
+                                FileUpload::make('foto')
+                                ->required()
+                                ->image()
+                                ->optimize('webp')
+                                ->imageEditor(),
                             ])->label('Foto Lainnya'),
                         Repeater::make('ukuran_produk')
                             ->relationship()
