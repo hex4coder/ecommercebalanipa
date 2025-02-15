@@ -22,7 +22,8 @@ RUN apt-get update && \
     php-xml \
     php-mbstring \
     php-intl \
-    node
+    nodejs \
+    node-npm
     
 
 # Install Composer
