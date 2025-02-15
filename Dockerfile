@@ -16,7 +16,8 @@ RUN apt-get update && \
     php-mysql \
     php-zip \
     php-gd \
-    php-curl
+    php-curl \
+    wget
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
