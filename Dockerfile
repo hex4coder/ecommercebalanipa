@@ -18,7 +18,10 @@ RUN apt-get update && \
     php-gd \
     php-curl \
     wget \
-    curl
+    curl \
+    php-xml \
+    php-mbstring
+    
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
