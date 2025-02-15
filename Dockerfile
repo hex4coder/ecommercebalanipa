@@ -52,6 +52,7 @@ COPY Caddyfile /etc/caddy/Caddyfile
 # Jalankan perintah-perintah yang dibutuhkan Laravel
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html \
+    && chmod +x artisan \
     && php artisan key:generate --force \
     && php artisan config:cache \
     && php artisan route:cache
