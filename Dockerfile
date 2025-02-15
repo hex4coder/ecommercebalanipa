@@ -1,9 +1,9 @@
-# Gunakan image base FrankenPHP
-FROM dunglas/frankenphp:latest
+# Gunakan image base Ubuntu
+FROM ubuntu:latest
 
-# Install ekstensi yang dibutuhkan Laravel (opsional, jika ada)
-RUN apk update && \
-    apk add -y \
+# Install paket-paket yang dibutuhkan
+RUN apt-get update && \
+    apt-get install -y \
     build-essential \
     libpng-dev \
     libjpeg62-turbo-dev \
@@ -11,10 +11,23 @@ RUN apk update && \
     locales \
     zip \
     unzip \
-    git
+    git \
+    php \
+    php-cli \
+    php-fpm \
+    php-mysql \
+    php-zip \
+    php-gd \
+    php-curl
 
-# Install Composer (perubahan di sini)
+# Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Install FrankenPHP (perubahan di sini)
+RUN apt-get install -y \
+    caddy \
+    && wget https://github.com/dunglas/frankenphp/releases/download/v1.0.0/frankenphp_linux_amd64 -O /usr/local/bin/frankenphp \
+    && chmod +x /usr/local/bin/frankenphp
 
 # Set working directory di dalam container
 WORKDIR /var/www/html
@@ -28,6 +41,9 @@ RUN composer install --no-interaction --no-dev --optimize-autoloader
 # Copy source code aplikasi Laravel
 COPY . .
 
+# Konfigurasi Caddy untuk Laravel (perubahan di sini)
+COPY Caddyfile /etc/caddy/Caddyfile
+
 # Jalankan perintah-perintah yang dibutuhkan Laravel
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html \
@@ -38,4 +54,5 @@ RUN chown -R www-data:www-data /var/www/html \
 # Expose port 80 untuk web server Caddy (FrankenPHP)
 EXPOSE 80
 
-# FrankenPHP sudah berjalan secara default, jadi tidak perlu CMD
+# Jalankan Caddy (FrankenPHP)
+CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile"]
