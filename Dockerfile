@@ -1,6 +1,21 @@
 # Gunakan image base FrankenPHP
 FROM dunglas/frankenphp:latest
 
+# Install ekstensi yang dibutuhkan Laravel (opsional, jika ada)
+RUN apk update && \
+    apk add -y \
+    build-essential \
+    libpng-dev \
+    libjpeg62-turbo-dev \
+    libfreetype6-dev \
+    locales \
+    zip \
+    unzip \
+    git
+
+# Install Composer (perubahan di sini)
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
 # Set working directory di dalam container
 WORKDIR /var/www/html
 
