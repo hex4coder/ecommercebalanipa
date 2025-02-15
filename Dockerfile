@@ -69,4 +69,5 @@ EXPOSE 8000
 # Jalankan Caddy (FrankenPHP)
 # CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile"]
 # CMD [ "frankenphp", "php-server" ]
+RUN php artisan migrate
 CMD [ "php", "artisan", "octane:frankenphp", "--host=0.0.0.0" ]
