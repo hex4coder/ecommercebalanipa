@@ -21,7 +21,8 @@ RUN apt-get update && \
     curl \
     php-xml \
     php-mbstring \
-    php-intl
+    php-intl \
+    node
     
 
 # Install Composer
@@ -62,6 +63,8 @@ RUN chown -R www-data:www-data /var/www/html \
 
 
 RUN php artisan octane:install --server=frankenphp
+
+RUN npm install
 
 # Expose port 8000 untuk web server Caddy (FrankenPHP)
 EXPOSE 8000
