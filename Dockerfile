@@ -40,11 +40,11 @@ WORKDIR /var/www/html
 # Copy file composer.json dan composer.lock (jika ada)
 COPY composer.json composer.lock ./
 
-# Install dependencies Composer
-RUN composer install --no-interaction --no-dev --optimize-autoloader
-
 # Copy source code aplikasi Laravel
 COPY . .
+
+# Install dependencies Composer
+RUN composer install --no-interaction --no-dev --optimize-autoloader
 
 # Konfigurasi Caddy untuk Laravel (perubahan di sini)
 COPY Caddyfile /etc/caddy/Caddyfile
