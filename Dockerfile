@@ -61,4 +61,5 @@ RUN chown -R www-data:www-data /var/www/html \
 EXPOSE 80
 
 # Jalankan Caddy (FrankenPHP)
-CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile"]
+# CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile"]
+CMD [ "frankenphp", "php-server" ]

@@ -1,9 +1,5 @@
-{
-	frankenphp
-}
-
 # The domain name of your server
-localhost {
+*:80 {
 	# Set the webroot to the public/ directory
 	root * public/
 	# Enable compression (optional)
