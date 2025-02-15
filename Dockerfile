@@ -70,4 +70,4 @@ EXPOSE 8000
 # CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile"]
 # CMD [ "frankenphp", "php-server" ]
 #  php artisan migrate
-CMD [ "php", "artisan", "migrate", " && " "php", "artisan", "octane:frankenphp", "--host=0.0.0.0" ]
+CMD [ "php", "artisan", "migrate", " && " , "php", "artisan", "octane:frankenphp", "--host=0.0.0.0" ]
