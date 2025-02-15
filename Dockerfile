@@ -20,7 +20,8 @@ RUN apt-get update && \
     wget \
     curl \
     php-xml \
-    php-mbstring
+    php-mbstring \
+    php-intl
     
 
 # Install Composer
