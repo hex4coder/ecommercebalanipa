@@ -46,20 +46,27 @@ COPY . .
 # Install dependencies Composer
 RUN composer install --no-interaction --no-dev --optimize-autoloader
 
+# install laravel octane
+RUN composer require laravel/octane
+
 # Konfigurasi Caddy untuk Laravel (perubahan di sini)
 COPY Caddyfile /etc/caddy/Caddyfile
 
 # Jalankan perintah-perintah yang dibutuhkan Laravel
 RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html \
-    && chmod +x artisan \
-    && php artisan key:generate --force \
-    && php artisan config:cache \
-    && php artisan route:cache
+&& chmod -R 755 /var/www/html \
+&& chmod +x artisan \
+&& php artisan key:generate --force \
+&& php artisan config:cache \
+&& php artisan route:cache
 
-# Expose port 80 untuk web server Caddy (FrankenPHP)
-EXPOSE 80
+
+RUN php artisan octane:install --server=frankenphp
+
+# Expose port 8000 untuk web server Caddy (FrankenPHP)
+EXPOSE 8000
 
 # Jalankan Caddy (FrankenPHP)
 # CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile"]
-CMD [ "frankenphp", "php-server" ]
+# CMD [ "frankenphp", "php-server" ]
+CMD [ "php", "artisan", "octane:frankenphp", "--host=0.0.0.0" ]
