@@ -24,9 +24,10 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Install FrankenPHP (perubahan di sini)
 RUN apt-get install -y \
-    caddy \
-    && wget https://github.com/dunglas/frankenphp/releases/download/v1.0.0/frankenphp_linux_amd64 -O /usr/local/bin/frankenphp \
-    && chmod +x /usr/local/bin/frankenphp
+    caddy
+
+RUN curl https://frankenphp.dev/install.sh | sh
+RUN mv frankenphp /usr/local/bin/
 
 # Set working directory di dalam container
 WORKDIR /var/www/html
