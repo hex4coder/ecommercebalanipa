@@ -67,6 +67,8 @@ RUN php artisan octane:install --server=frankenphp
 
 RUN npm install
 
+RUN npm run build
+
 # Expose port 8000 untuk web server Caddy (FrankenPHP)
 EXPOSE 8000
 
