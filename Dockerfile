@@ -60,7 +60,8 @@ RUN chown -R www-data:www-data /var/www/html \
 && chmod +x artisan \
 && php artisan key:generate --force \
 && php artisan config:cache \
-&& php artisan route:cache
+&& php artisan route:cache \
+&& php artisan storage:link
 
 
 RUN php artisan octane:install --server=frankenphp
