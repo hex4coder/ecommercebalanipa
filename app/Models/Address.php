@@ -12,6 +12,8 @@ class Address extends Model
 
     protected $guarded = [];
 
+    protected $table = 'addresses';
+
 
     public function user() {
         return $this->belongsTo(User::class);

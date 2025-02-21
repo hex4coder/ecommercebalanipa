@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+use Illuminate\Support\Facades\DB;
+
 class User extends Authenticatable implements FilamentUser
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -61,7 +63,7 @@ class User extends Authenticatable implements FilamentUser
     }
 
     public function address() {
-        return $this->hasOne(Address::class);
+        return $this->hasOne(Address::class, 'user_id');
     }
 
     public function pesanan() {
@@ -69,7 +71,9 @@ class User extends Authenticatable implements FilamentUser
     }
 
     public function full_address() {
-        $address = Address::where('user_id', $this->id)->first();
+        // $address = Address::where('user_id', $this->id)->first();
+        $address = DB::table('addresses')
+        ->where('user_id', $this->id)->first();
         if($address) {
             return $address->jalan . " " . $address->dusun . " Desa/Kel. " . $address->desa . " Kec. " . $address->kecamatan . ", " . $address->kota . " Provinsi " . $address->provinsi . " Kode Pos " . $address->kodepos . "\nNomor Telpon: " . $address->nomorhp;
         }

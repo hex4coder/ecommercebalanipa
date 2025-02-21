@@ -1,6 +1,6 @@
 <x-filament-panels::page>
 <!-- Invoice -->
-<div class="max-w-[85rem] px-4 sm:px-6 lg:px-8 mx-auto my-4 sm:my-10">
+<div class="max-w-[90%] px-4 sm:px-6 lg:px-8 mx-auto my-4 sm:my-10">
     <div class="sm:w-11/12 lg:w-3/4 mx-auto">
       <!-- Card -->
       <div class="flex flex-col p-4 sm:p-10 bg-white shadow-md rounded-xl dark:bg-neutral-800">
