@@ -28,4 +28,10 @@ class EditProduk extends EditRecord
 
         return $p;
     }
+
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
 }

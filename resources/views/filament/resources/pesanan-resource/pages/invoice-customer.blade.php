@@ -17,7 +17,7 @@
             <h2 class="text-2xl md:text-3xl font-semibold text-gray-800 dark:text-neutral-200">Invoice #</h2>
             <span class="mt-1 block text-gray-500 dark:text-neutral-500">Order ID {{$order->id}}</span>
   
-            <address class="mt-4 not-italic text-gray-800 dark:text-neutral-200">
+            <address class="mt-4 not-italic text-nvalid value for 'pull.rebase': '='gray-800 dark:text-neutral-200">
                 Jl. Bulu Dua <br>Desa Tammangalle <br>Kec. Balanipa
             </address>
           </div>
