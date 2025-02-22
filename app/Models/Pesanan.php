@@ -19,6 +19,6 @@ class Pesanan extends Model
     }
 
     public function detail() {
-        return $this->hasMany(DetailPesanan::class, 'pesanan_id');
+        return $this->hasMany(DetailPesanan::class);
     }
 }

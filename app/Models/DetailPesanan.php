@@ -14,10 +14,10 @@ class DetailPesanan extends Model
     protected $guarded = [];
 
     public function pesanan() {
-        return $this->belongsTo(Pesanan::class, 'id');
+        return $this->belongsTo(Pesanan::class);
     }
 
     public function produk() {
-        return $this->belongsTo(Produk::class, 'id');
+        return $this->belongsTo(Produk::class);
     }
 }

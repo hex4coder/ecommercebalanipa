@@ -23,7 +23,6 @@ class InvoiceCustomer extends Page
     {
         $orderId = (request('record'));
         $this->order = Pesanan::query()->with(['detail', 'detail.produk', 'user'])->where('id', $orderId)->first();
-        
 
         $user_id = $this->order->user_id;
         $this->userAddress = DB::table('addresses')
@@ -33,6 +32,6 @@ class InvoiceCustomer extends Page
     public function get_product_info($productId)
     {
         $product = Produk::find($productId);
-        return $product->nama;
+        return $product;
     }
 }

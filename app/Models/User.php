@@ -63,11 +63,11 @@ class User extends Authenticatable implements FilamentUser
     }
 
     public function address() {
-        return $this->hasOne(Address::class, 'user_id');
+        return $this->hasOne(Address::class);
     }
 
     public function pesanan() {
-        return $this->hasMany(Pesanan::class, 'user_id');
+        return $this->hasMany(Pesanan::class);
     }
 
     public function full_address() {

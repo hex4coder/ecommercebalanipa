@@ -14,19 +14,19 @@ class Produk extends Model
     protected $guarded = ['id'];
 
     public function brand() {
-        return $this->belongsTo(Brand::class, 'brand_id');
+        return $this->belongsTo(Brand::class);
     }
 
     public function detail_pesanan() {
-        return $this->hasMany(DetailPesanan::class, 'produk_id');
+        return $this->hasMany(DetailPesanan::class);
     }
 
     public function foto_produk() {
-        return $this->hasMany(FotoProduk::class, 'produk_id');
+        return $this->hasMany(FotoProduk::class);
     }
 
     public function ukuran_produk() {
-        return $this->hasMany(UkuranProduk::class, 'produk_id');
+        return $this->hasMany(UkuranProduk::class);
     }
 
     public function ukuran() {
@@ -34,11 +34,11 @@ class Produk extends Model
     }
 
     public function kategori() {
-        return $this->belongsTo(Kategori::class, 'id');
+        return $this->belongsTo(Kategori::class);
     }
 
     public function detail() {
-        return $this->hasMany(DetailPesanan::class, 'produk_id');
+        return $this->hasMany(DetailPesanan::class);
     }
 
     public function short_desc() {

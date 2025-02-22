@@ -1,7 +1,7 @@
 <x-filament-panels::page>
 <!-- Invoice -->
-<div class="max-w-[90%] px-4 sm:px-6 lg:px-8 mx-auto my-4 sm:my-10">
-    <div class="sm:w-11/12 lg:w-3/4 mx-auto">
+<div class="w-[90%] px-4 sm:px-6 lg:px-8 mx-auto my-4 sm:my-10">
+    <div class="mx-auto">
       <!-- Card -->
       <div class="flex flex-col p-4 sm:p-10 bg-white shadow-md rounded-xl dark:bg-neutral-800">
         <!-- Grid -->
@@ -58,7 +58,8 @@
         <div class="mt-6">
           <div class="border border-gray-200 p-4 rounded-lg space-y-4 dark:border-neutral-700">
             <div class="hidden sm:grid sm:grid-cols-5">
-              <div class="sm:col-span-2 text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Produk</div>
+              <div class="text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Produk</div>
+              <div class="text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Ukuran</div>
               <div class="text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Jumlah</div>
               <div class="text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Harga</div>
               <div class="text-end text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Total</div>
@@ -69,9 +70,14 @@
                 <div class="hidden sm:block border-b border-gray-200 dark:border-neutral-700"></div>
     
                 <div class="grid grid-cols-3 sm:grid-cols-5 gap-2">
-                <div class="col-span-full sm:col-span-2">
+                <div class="">
                     <h5 class="sm:hidden text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Produk</h5>
-                    <p class="font-medium text-gray-800 dark:text-neutral-200">{{$this->get_product_info($item->produk_id)}}</p>
+                    <p class="font-medium text-sm text-gray-800 dark:text-neutral-200">{{$item->produk->nama}}</p>
+                    <p class="text-xs text-gray-600">{{$item->keterangan}}</p>
+                </div>
+                <div>
+                    <h5 class="sm:hidden text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Ukuran</h5>
+                    <p class="text-gray-800 dark:text-neutral-200">{{$item->ukuran}}</p>
                 </div>
                 <div>
                     <h5 class="sm:hidden text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Jumlah</h5>
